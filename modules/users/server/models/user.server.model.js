@@ -41,7 +41,7 @@ var validateLocalStrategyEmail = function (email) {
  */
 
 var validateUsername = function (username) {
-  var usernameRegex = /^(?=[\w.-]+$)(?!.*[._-]{2})(?!\.)(?!.*\.$).{3,34}$/;
+  var usernameRegex = /^(?=[\w.-]+$)(?!.*[._-]{2})(?![._-])(?!.*[._-]$).{3,24}$/; ///^(?=[\w.-]+$)(?!.*[._-]{2})(?!\.)(?!.*\.$).{3,34}$/;
   return (
     this.provider !== 'local' ||
     (username && usernameRegex.test(username) && config.illegalUsernames.indexOf(username) < 0)
@@ -52,18 +52,18 @@ var validateUsername = function (username) {
  * User Schema
  */
 var UserSchema = new Schema({
-  firstName: {
-    type: String,
-    trim: true,
-    default: '',
-    validate: [validateLocalStrategyProperty, 'Please fill in your first name']
-  },
-  lastName: {
-    type: String,
-    trim: true,
-    default: '',
-    validate: [validateLocalStrategyProperty, 'Please fill in your last name']
-  },
+  // firstName: {
+  //   type: String,
+  //   trim: true,
+  //   default: '',
+  //   validate: [validateLocalStrategyProperty, 'Please fill in your first name']
+  // },
+  // lastName: {
+  //   type: String,
+  //   trim: true,
+  //   default: '',
+  //   validate: [validateLocalStrategyProperty, 'Please fill in your last name']
+  // },
   displayName: {
     type: String,
     trim: true

@@ -15,7 +15,7 @@
     vm.signup = signup;
     vm.signin = signin;
     vm.callOauthProvider = callOauthProvider;
-    vm.usernameRegex = /^(?=[\w.-]+$)(?!.*[._-]{2})(?!\.)(?!.*\.$).{3,34}$/;
+    vm.usernameRegex = /^(?=[\w.-]+$)(?!.*[._-]{2})(?![._-])(?!.*[._-]$).{3,24}$/;
 
     // Get an eventual error defined in the URL query string:
     if ($location.search().err) {
@@ -80,7 +80,7 @@
     function onUserSigninSuccess(response) {
       // If successful we assign the response to the global user model
       vm.authentication.user = response;
-      Notification.info({ message: 'Welcome ' + response.firstName });
+      Notification.info({ message: 'Welcome ' + response.username /*firstName*/ });
       // And redirect to the previous or home page
       $state.go($state.previous.state.name || 'home', $state.previous.params);
     }
