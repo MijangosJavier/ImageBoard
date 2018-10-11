@@ -1,0 +1,48 @@
+<section>
+  <div class="page-header">
+    <h1>{{vm.post._id ? 'Edit Post' : 'New Post'}}</h1>
+  </div>
+  <div class="pull-right">
+    <a ng-show="vm.post._id" class="btn btn-primary" ng-click="vm.remove()">
+      <i class="glyphicon glyphicon-trash"></i>
+    </a>
+  </div>
+  <div class="col-md-12">
+    <form name="vm.form.postForm" class="form-horizontal" ng-submit="vm.save(vm.form.postForm.$valid)" novalidate>
+      <fieldset>
+        <div ng-show="vm.post.threadParent" class="form-group" show-errors>
+          <label class="control-label" for="topic">Topic</label>
+          <input name="topic" type="text" ng-model="vm.post.topic" id="topic" class="form-control" placeholder="Topic" >
+        </div>
+        <div class="form-group">
+          <label class="control-label" for="name">Name</label>
+          <input name="name" type="text" ng-model="vm.post.name" id="name" class="form-control" placeholder="{{vm.authentication.user ? vm.authentication.user.displayName : 'Anonymous'}}" maxlength="24">
+        </div>
+        <div class="form-group">
+          <label class="control-label" for="comment">Comment</label>
+          <textarea name="comment" data-ng-model="vm.post.content.comment" id="comment" class="form-control" cols="30" rows="10" placeholder="Comment" autofocus></textarea>
+        </div>
+        <!-- <div class="form-group"> -->
+          <!-- <button class="btn btn-default btn-file" ngf-select="(vm.fileSelected = true) && (vm.loading = false)" ng-model="picFile" accept="image/*, video/webm" ngf-before-model-change="vm.loading = true"  ngf-validate="{size: {max: '5MB', min: '10B'}, height: {max: 12000}, width: {max: 12000}}">Select File</button> -->
+          <!-- <button class="btn btn-default btn-file" ngf-select="(vm.fileSelected = true) && (vm.loading = false)" ng-model="picFile" accept="image/*" ngf-before-model-change="vm.loading = true" ngf-resize="{width: 400}" ngf-resize-if="$width > 400 || $height > 400">Select File</button> -->
+          <!-- <input type="file" class="btn btn-default btn-file" ngf-select="(vm.fileSelected = true) && (vm.loading = false)" ng-model="picFile" accept="image/*, video/webm" ngf-before-model-change="vm.loading = true"  ngf-validate="{size: {max: '5MB', min: '10B'}, height: {max: 12000}, width: {max: 12000}}"> -->
+        <!-- </div> -->
+        <div class="form-group">
+          <button class="btn btn-default btn-file" ngf-select="(vm.fileSelected = true) && (vm.loading = false)" ng-model="picFile" accept="image/*" ngf-before-model-change="vm.loading = true" ngf-validate="{size: {max: '5MB'}, height: {max: 12000}, width: {max: 12000}}">Select Picture</button>
+        </div>
+        <div ng-show="vm.fileSelected" class="form-group">
+          <button type="button" class="btn btn-default" ng-click="vm.fileSelected = false" >Cancel</button>
+        </div>
+        <div ng-show="vm.fileSelected" class="progress text-center">
+          <div class="progress-bar" role="progressbar" aria-valuenow="{{vm.progress}}" aria-valuemin="0" aria-valuemax="100" style="width:{{vm.progress}}%" ng-bind="vm.progress + '%'">
+            <span class="sr-only">{{vm.progress}}% Complete</span>
+          </div>
+        </div>
+        <div class="form-group">
+          <button type="submit" class="btn btn-default">{{vm.post._id ? 'Update' : 'Create'}}</button>
+        </div>
+      </fieldset>
+    </form>
+  </div>
+</section>
+

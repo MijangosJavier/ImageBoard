@@ -25,8 +25,8 @@ module.exports = function (config) {
 
     // Create the user OAuth profile
     var providerUserProfile = {
-      firstName: profile.name.givenName,
-      lastName: profile.name.familyName,
+      // firstName: profile.name.givenName,
+      // lastName: profile.name.familyName,
       displayName: profile.displayName,
       email: profile._json.email,
       username: profile.username,

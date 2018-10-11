@@ -84,7 +84,7 @@ var UserSchema = new Schema({
     unique: 'Username already exists',
     required: 'Please fill in a username',
     validate: [validateUsername, 'Please enter a valid username: 3+ characters long, non restricted word, characters "_-.", no consecutive dots, does not begin or end with dots, letters a-z and numbers 0-9.'],
-    lowercase: true,
+    // lowercase: true,
     trim: true
   },
   password: {
@@ -299,7 +299,7 @@ function seed(doc, options) {
             var user = new User(doc);
 
             user.provider = 'local';
-            user.displayName = user.firstName + ' ' + user.lastName;
+            user.displayName = user.username;/*user.firstName + ' ' + user.lastName;*/
             user.password = passphrase;
 
             user.save(function (err) {

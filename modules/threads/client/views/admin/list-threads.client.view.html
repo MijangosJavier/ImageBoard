@@ -1,0 +1,26 @@
+﻿<section>
+  <div class="page-header">
+    <h1>
+      Threads
+      <a class="btn btn-primary pull-right" data-ui-sref="admin.threads.create">
+        <i class="glyphicon glyphicon-plus"></i>
+      </a>
+    </h1>
+  </div>
+  <div class="list-group">
+    <a data-ng-repeat="thread in vm.threads" data-ui-sref="admin.threads.edit({threadId: thread._id})" class="list-group-item">
+      <small class="list-group-item-text">
+        Posted on
+        <span data-ng-bind="thread.created | date:'mediumDate'"></span>
+        by
+        <span ng-if="thread.user" ng-bind="thread.user.displayName"></span>
+        <span ng-if="!thread.user">Deleted User</span>
+      </small>
+      <h4 class="list-group-item-heading" data-ng-bind="thread.title"></h4>
+      <p class="list-group-item-text" data-ng-bind="thread.content"></p>
+    </a>
+  </div>
+  <div class="alert alert-warning text-center" data-ng-if="vm.threads.$resolved && !vm.threads.length">
+    No threads yet, why don't you <a data-ui-sref="admin.threads.create">create one</a>?
+  </div>
+</section>

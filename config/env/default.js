@@ -62,6 +62,14 @@ module.exports = {
           fileSize: 1 * 1024 * 1024 // Max file size in bytes (1 MB)
         }
       }
+    },
+    postFile: {
+      image: {
+        dest: './modules/posts/client/img/postFile/uploads/',
+        limits: {
+          fileSize: 5 * 1024 * 1024 // Max file size in bytes (5 MB)
+        }
+      }
     }
   },
   shared: {

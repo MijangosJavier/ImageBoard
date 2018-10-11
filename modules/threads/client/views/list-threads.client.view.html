@@ -1,0 +1,18 @@
+<section>
+  <div class="page-header">
+    <h1>Threads</h1>
+  </div>
+  <div class="list-group">
+    <a ng-repeat="thread in vm.threads" ui-sref="threads.view({ threadId: thread._id })" class="list-group-item">
+      <small class="list-group-item-text">
+        Posted on
+        <span ng-bind="thread.created | date:'mediumDate'"></span>
+        by
+        <span ng-if="thread.user" ng-bind="thread.user.displayName"></span>
+        <span ng-if="!thread.user">Deleted User</span>
+      </small>
+      <h4 class="list-group-item-heading" ng-bind="thread.title"></h4>
+      <p class="list-group-item-text" ng-bind="thread.content"></p>
+    </a>
+  </div>
+</section>
