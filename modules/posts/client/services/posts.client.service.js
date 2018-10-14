@@ -23,7 +23,11 @@
       },
       getSpecialID: function(isOP, threadNumber) {
         return getSpecialID(isOP, threadNumber);
-      }
+      },
+      // getList: function(){
+      //   var post = this;
+      //   return getList(post);
+      // }
 
     });
 
@@ -48,6 +52,21 @@
         handleError(error);
       }
     }
+
+    // function getList(post) {
+    //   return post.$get(onSuccess, onError);
+
+    //   function onSuccess(post) {
+    //     // Any required internal processing from inside the service, goes here.
+    //   }
+
+    //   // Handle error response
+    //   function onError(errorResponse) {
+    //     var error = errorResponse.data;
+    //     // Handle error internally
+    //     handleError(error);
+    //   }
+    // }
 
     function setCookie(threadNumber, specialID, exdays) {
       var d = new Date();

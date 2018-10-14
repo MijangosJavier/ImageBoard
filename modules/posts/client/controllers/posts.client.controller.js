@@ -5,12 +5,15 @@
     .module('posts')
     .controller('PostsController', PostsController);
 
-  PostsController.$inject = ['$scope', '$state', '$window','$timeout', 'postResolve', 'Authentication','Upload', 'Notification'];
+  PostsController.$inject = ['$scope', '$state', '$window','$timeout', 'postResolve', 'Authentication', 'Upload', 'Notification', 'PostsService', 'ListPostsService'];
 
-  function PostsController($scope, $state, $window, $timeout, post, Authentication, Upload, Notification) {
+  function PostsController($scope, $state, $window, $timeout, post, Authentication, Upload, Notification, PostsService, ListPostsService) {
     var vm = this;
 
-    vm.post = post;
+    console.log(post);
+    // vm.posts = new ListPostsService().getList(post); //new ListPostsService.query(); ////post.getList(); //PostsService.query();
+    vm.posts = post;
+    vm.post = /*post;*/new PostsService();
     vm.authentication = Authentication;
     vm.form = {};
     vm.remove = remove;
@@ -71,6 +74,7 @@
         if($scope.picFile){
           var fileAttached = {
             fileURL:response.pathFile,
+            mimetype: $scope.picFile.type,
             origFileName: $scope.picFile.name,
             weight: $scope.picFile.size,
             height: $scope.picFile.$ngfHeight,

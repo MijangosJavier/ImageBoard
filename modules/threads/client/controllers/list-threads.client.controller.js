@@ -5,11 +5,25 @@
     .module('threads')
     .controller('ThreadsListController', ThreadsListController);
 
-  ThreadsListController.$inject = ['ThreadsService'];
+  ThreadsListController.$inject = ['$scope','$window', 'ThreadsService'];
 
-  function ThreadsListController(ThreadsService) {
+  function ThreadsListController($scope, $window, ThreadsService) {
     var vm = this;
 
     vm.threads = ThreadsService.query();
+    vm.loaded = false;
+    vm.curPage = 1,
+  	vm.itemsPerPage = 6,
+  	vm.maxSize = 5;
+
+	vm.init = function () {
+		vm.loaded = true;
+		var begin = ((vm.curPage - 1) * vm.itemsPerPage),
+	    end = begin + vm.itemsPerPage;
+	    
+	    vm.filteredItems = $scope.totalThreads.slice(begin, end);
+	    $window.scrollTo(0, 0);
+	};
+
   }
 }());

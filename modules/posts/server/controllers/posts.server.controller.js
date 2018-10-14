@@ -33,8 +33,7 @@ if (useS3Storage) {
 exports.create = function (req, res) {
   var post = new Post(req.body);
   var user = req.user;
-  console.log(post.name);
-  console.log(user);
+  
   post.name = user ? (req.body.name ? post.name : user.displayName) : post.name;
   post.isUser = !!user;
 
@@ -170,11 +169,23 @@ exports.uploadFile = function (req, res) {
  */
 exports.read = function (req, res) {
   // convert mongoose document to JSON
+  // 
+  // Post.find({threadParent: req.post.number}).sort('-created').exec(function (err, posts) {
+  //   if (err) {
+  //     return res.status(422).send({
+  //       message: errorHandler.getErrorMessage(err)
+  //     });
+  //   } else {
+  //     console.log(typeof res.json(posts));
+  //     // res.json(posts);
+  //   }
+  // });
+  console.log("HIIIII");
   var post = req.post ? req.post.toJSON() : {};
 
   // Add a custom field to the Post, for determining if the current User is the "owner".
   // NOTE: This field is NOT persisted to the database, since it doesn't exist in the Post model.
-  post.isCurrentUserOwner = !!(req.user && post.user && post.user._id.toString() === req.user._id.toString());
+  // post.isCurrentUserOwner = !!(req.user && post.user && post.user._id.toString() === req.user._id.toString());
 
   res.json(post);
 };
@@ -221,7 +232,9 @@ exports.delete = function (req, res) {
  */
 exports.list = function (req, res) {
   // Post.find().sort('-created').populate('user', 'displayName').exec(function (err, posts) {
-    Post.find().sort('-created').exec(function (err, posts) {
+  // Post.find().sort('-created').exec(function (err, posts) {
+  console.log('LIST req', req.post);
+  Post.find({threadParent: req.post.number}).sort('created').exec(function (err, posts) {
     if (err) {
       return res.status(422).send({
         message: errorHandler.getErrorMessage(err)

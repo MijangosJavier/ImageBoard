@@ -6,24 +6,57 @@
 var path = require('path'),
   mongoose = require('mongoose'),
   Thread = mongoose.model('Thread'),
+  Post = mongoose.model('Post'),
   errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller'));
 
 /**
  * Create an thread
  */
 exports.create = function (req, res) {
+  var post = new Post(req.body);
   var thread = new Thread(req.body);
-  thread.user = req.user;
+  var user = req.user;
+  
+  post.name = user ? (req.body.name ? post.name : user.displayName) : post.name;
+  post.isUser = !!user;
 
-  thread.save(function (err) {
-    if (err) {
-      return res.status(422).send({
-        message: errorHandler.getErrorMessage(err)
-      });
-    } else {
-      res.json(thread);
-    }
-  });
+  var TrySaveThread = function(reqThread, savedPost, res){
+    reqThread.number = savedPost.number;
+    reqThread.save(function (err) {
+      if (err) {
+        return res.status(422).send({
+          message: errorHandler.getErrorMessage(err)
+        });
+      } else {
+        //res.json(reqThread);
+        res.json(savedPost);
+      }
+    });    
+  }
+
+  var TrySavePost = function(reqPost, res){
+    reqPost.save(function(err, savedPost){
+      if(err && err.code === 11000){//Repited index (Post number)
+        reqPost.number++;
+        TrySave(reqPost, res);
+      }else if(err){
+        return res.status(422).send({
+          message: errorHandler.getErrorMessage(err)
+        });
+      }else {
+        // console.log(savedPost);
+        TrySaveThread(thread, savedPost, res);
+      }
+    });
+  }
+
+  TrySavePost(post, res);
+
+
+  // 
+  // thread.user = req.user;
+
+
 };
 
 /**
@@ -81,7 +114,15 @@ exports.delete = function (req, res) {
  * List of threads
  */
 exports.list = function (req, res) {
-  Thread.find().sort('-created').populate('user', 'displayName').exec(function (err, threads) {
+ // Thread.find().sort('-created').populate('user', 'displayName').exec(function (err, threads) {
+  Thread.aggregate([{ $lookup:
+     {
+       from: 'posts',
+       localField: 'number',
+       foreignField: 'threadParent',
+       as: 'post'
+     }}])
+  .sort('-created').exec(function (err, threads) {
     if (err) {
       return res.status(422).send({
         message: errorHandler.getErrorMessage(err)

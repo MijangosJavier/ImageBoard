@@ -13,6 +13,16 @@ var validateContent = function () {
   return (this.content.comment!=='' || this.content.fileAttached.origFileName!==undefined);
 };
 
+var validateOP = function () {
+  return (this.isOP ? 
+    (
+      this.content.comment!=='' &&
+      this.content.fileAttached.origFileName!==undefined
+    ) :
+      true
+  );
+};
+
 var validateName = function (name) {
   var nameRegex = /[^A-Za-z0-9]/;
   return !nameRegex.test(name);
@@ -43,6 +53,9 @@ var PostSchema = new Schema({
       fileURL:{
         type: String,
       },
+      mimetype:{
+        type: String,
+      },
       width:{
         type: Number,
       },
@@ -68,15 +81,14 @@ var PostSchema = new Schema({
     type: Number,
     index: true,
     unique: true,
-    // required: 'post number is required',
   },
   isOP:{
     type: Boolean,
     default: false,
+    validate: [validateOP, 'Thread must have a picture and a comment'],
   },
   threadParent:{
     type: Number,
-    // required: 'thread parent is required',
   },
   isUser:{
     type: Boolean,
@@ -93,11 +105,6 @@ var PostSchema = new Schema({
       type: Number,
     }],
   },
-
-  // user: {
-  //   type: Schema.ObjectId,
-  //   ref: 'User'
-  // }
 });
 
 PostSchema.pre('save', function (next) {

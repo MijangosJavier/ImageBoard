@@ -17,21 +17,14 @@ var ThreadSchema = new Schema({
     type: Date,
     default: Date.now
   },
-  title: {
+  topic: {
     type: String,
     default: '',
     trim: true,
-    required: 'Title cannot be blank'
   },
-  content: {
-    type: String,
-    default: '',
-    trim: true
+  number:{
+    type: Number,
   },
-  user: {
-    type: Schema.ObjectId,
-    ref: 'User'
-  }
 });
 
 ThreadSchema.statics.seed = seed;
@@ -48,7 +41,6 @@ function seed(doc, options) {
   return new Promise(function (resolve, reject) {
 
     skipDocument()
-      .then(findAdminUser)
       .then(add)
       .then(function (response) {
         return resolve(response);
@@ -57,35 +49,11 @@ function seed(doc, options) {
         return reject(err);
       });
 
-    function findAdminUser(skip) {
-      var User = mongoose.model('User');
-
-      return new Promise(function (resolve, reject) {
-        if (skip) {
-          return resolve(true);
-        }
-
-        User
-          .findOne({
-            roles: { $in: ['admin'] }
-          })
-          .exec(function (err, admin) {
-            if (err) {
-              return reject(err);
-            }
-
-            doc.user = admin;
-
-            return resolve();
-          });
-      });
-    }
-
     function skipDocument() {
       return new Promise(function (resolve, reject) {
         Thread
           .findOne({
-            title: doc.title
+            number: doc.number
           })
           .exec(function (err, existing) {
             if (err) {
@@ -117,7 +85,7 @@ function seed(doc, options) {
       return new Promise(function (resolve, reject) {
         if (skip) {
           return resolve({
-            message: chalk.yellow('Database Seeding: Thread\t' + doc.title + ' skipped')
+            message: chalk.yellow('Database Seeding: Thread\t' + doc.topic + ' skipped')
           });
         }
 
@@ -129,7 +97,7 @@ function seed(doc, options) {
           }
 
           return resolve({
-            message: 'Database Seeding: Thread\t' + thread.title + ' added'
+            message: 'Database Seeding: Thread\t' + thread.topic + ' added'
           });
         });
       });

@@ -14,12 +14,12 @@
         url: '/posts',
         template: '<ui-view/>'
       })
-      .state('posts.list', {
-        url: '',
-        templateUrl: '/modules/posts/client/views/list-posts.client.view.html',
-        controller: 'PostsListController',
-        controllerAs: 'vm'
-      })
+      // .state('posts.list', {
+      //   url: '/:postId',
+      //   templateUrl: '/modules/posts/client/views/list-posts.client.view.html',
+      //   controller: 'PostsListController',
+      //   controllerAs: 'vm'
+      // })
       .state('posts.create', {
         url: '/create',
         templateUrl: '/modules/posts/client/views/admin/form-post.client.view.html',
@@ -38,10 +38,22 @@
         controller: 'PostsController',
         controllerAs: 'vm',
         resolve: {
-          postResolve: getPost
+          postResolve: getListPosts/*newPost*///getPost
         },
+        // data: {
+        //   pageTitle: '{{ postResolve.threadParent }}'
+        // }
+      })
+      .state('posts.edit', {
+        url: '/:postId/edit',
+        templateUrl: '/modules/posts/client/views/admin/form-post.client.view.html',
+        controller: 'PostsController',
+        controllerAs: 'vm',
         data: {
           pageTitle: '{{ postResolve.title }}'
+        },
+        resolve: {
+          postResolve: getPost
         }
       });
   }
@@ -59,4 +71,14 @@
   function newPost(PostsService) {
     return new PostsService();
   }
+
+  getListPosts.$inject = ['$stateParams', 'ListPostsService'];
+
+  function getListPosts($stateParams, ListPostsService) {
+    return ListPostsService.query({
+      postId: $stateParams.postId
+    }).$promise;
+  }
+
+
 }());

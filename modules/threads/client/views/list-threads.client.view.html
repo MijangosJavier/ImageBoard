@@ -1,18 +1,60 @@
 <section>
   <div class="page-header">
-    <h1>Threads</h1>
+    <h1>Threads
+      <a class="btn btn-primary pull-right" data-ui-sref="threads.create">
+        <i class="glyphicon glyphicon-plus"></i>
+      </a>
+    </h1>
   </div>
   <div class="list-group">
-    <a ng-repeat="thread in vm.threads" ui-sref="threads.view({ threadId: thread._id })" class="list-group-item">
-      <small class="list-group-item-text">
-        Posted on
-        <span ng-bind="thread.created | date:'mediumDate'"></span>
-        by
-        <span ng-if="thread.user" ng-bind="thread.user.displayName"></span>
-        <span ng-if="!thread.user">Deleted User</span>
-      </small>
-      <h4 class="list-group-item-heading" ng-bind="thread.title"></h4>
-      <p class="list-group-item-text" ng-bind="thread.content"></p>
+    <div hidden data-ng-model="totalThreads" data-ng-init="totalThreads=vm.threads"></div>
+    <div hidden data-ng-if="vm.threads.$resolved && !vm.loaded" data-ng-init="vm.init()"></div>
+    <a ng-repeat="thread in vm.filteredItems" ui-sref="posts.view({ postId: thread.post[0]._id })" class="list-group-item">
+      <div hidden ng-model="file" ng-init="file=thread.post[0].content.fileAttached"></div>
+      <div class="container-fluid row">
+        <div class="col-sm-12">
+          <small>
+            File:
+            <span ng-if="file.origFileName.length > 30"><span ng-bind="file.origFileName.slice(0,25)" title="{{file.origFileName}}"></span>...</span>
+            <span ng-if="file.origFileName.length <= 30" ng-bind="file.origFileName" title="{{file.origFileName}}"></span>
+            (<span ng-if="(file.weight < 1024)" ><span ng-bind="file.weight"></span> B </span>
+            <span ng-if="(file.weight > 1024) &&(file.weight < 1048576)"><span ng-bind="(file.weight/1024).toFixed(0)"></span> KB </span>
+            <span ng-if="(file.weight > 1048576)"><span ng-bind="((file.weight/1024)/1024).toFixed(1)"></span> MB </span>
+            <span ng-bind="file.width"></span>
+            <span ng-if="file.height">x</span><span ng-bind="file.height"></span>)
+          </small>
+        </div>
+        <div class="col-sm-3">
+          <div>
+            <img ng-if="((file.height >= file.width) && (file.height >= 250))" ng-src="{{file.fileURL}}" style="height: 250px; width: auto;">
+            <img ng-if="((file.height >= file.width) && (file.height < 250))" ng-src="{{file.fileURL}}">
+            <img ng-if="((file.height < file.width) && (file.height >= 250))" ng-src="{{file.fileURL}}" style="height: auto; width: 250px;">
+            <img ng-if="((file.height < file.width) && (file.height < 250))" ng-src="{{file.fileURL}}">
+            <video ng-if="file.mimetype === 'video/webm'" width="250" height="auto" autoplay loop controls muted>
+              <source ng-src="{{file.fileURL}}" type="video/webm">
+            </video>
+          </div>   
+        </div>
+        <div class="col-sm-9">
+          <div>
+            <strong ng-show="thread.topic !== ''" ng-bind="thread.topic"></strong>
+            <small class="list-group-item-text">
+              <span ng-show="(thread.post[0].isUser && thread.post[0].name!=='Anonymous')">##</span>
+              <span ng-bind="thread.post[0].name"></span>
+               (ID:<span ng-bind="thread.post[0].specialID"></span>) 
+              <span ng-bind="thread.created | date:'MM/d/yy(EEE) HH:mm:ss'"></span> 
+               No. <span ng-bind="thread.number"></span> 
+          </small>
+          </div>
+          <div>
+            <p ng-bind="thread.post[0].content.comment"></p>
+          </div>
+        </div>
+      </div>
     </a>
+  </div>
+  <ul uib-pagination items-per-page="vm.itemsPerPage" total-items="totalThreads.length" data-ng-model="vm.curPage" max-size="vm.maxSize" class="pagination-sm" boundary-links="true" force-ellipses="true" ng-change="vm.init()" ng-click="vm.goToTop()"></ul>
+  <div class="alert alert-warning text-center" data-ng-if="vm.threads.$resolved && !vm.threads.length">
+    No posts yet, why don't you <a data-ui-sref="threads.create">create one</a>?
   </div>
 </section>

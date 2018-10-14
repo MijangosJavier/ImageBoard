@@ -11,7 +11,7 @@ acl = new acl(new acl.memoryBackend());
 /**
  * Invoke Posts Permissions /api/posts/postfile
  */
-exports.invokeRolesPolicies = function () {
+exports.invokeRolesPolicies = function () {//'/api/listposts/:postId'
   acl.allow([{
     roles: ['admin'],
     allows: [{
@@ -22,6 +22,9 @@ exports.invokeRolesPolicies = function () {
       permissions: '*'
     }, {
       resources: '/api/fileposts/postfile',
+      permissions: '*'
+    }, {
+      resources: '/api/posts/list/:postId',
       permissions: '*'
     }]
   }, {
@@ -35,6 +38,9 @@ exports.invokeRolesPolicies = function () {
     }, {
       resources: '/api/fileposts/postfile',
       permissions: '*'
+    }, {
+      resources: '/api/posts/list/:postId',
+      permissions: '*'
     }]
   }, {
     roles: ['guest'],
@@ -46,6 +52,9 @@ exports.invokeRolesPolicies = function () {
       permissions: ['*']
     }, {
       resources: '/api/fileposts/postfile',
+      permissions: '*'
+    }, {
+      resources: '/api/posts/list/:postId',
       permissions: '*'
     }]
   }]);

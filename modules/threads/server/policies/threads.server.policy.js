@@ -25,19 +25,19 @@ exports.invokeRolesPolicies = function () {
     roles: ['user'],
     allows: [{
       resources: '/api/threads',
-      permissions: ['get']
+      permissions: ['get', 'post']
     }, {
       resources: '/api/threads/:threadId',
-      permissions: ['get']
+      permissions: ['get', 'delete']
     }]
   }, {
     roles: ['guest'],
     allows: [{
       resources: '/api/threads',
-      permissions: ['get']
+      permissions: ['get', 'post']
     }, {
       resources: '/api/threads/:threadId',
-      permissions: ['get']
+      permissions: ['get', 'delete']
     }]
   }]);
 };

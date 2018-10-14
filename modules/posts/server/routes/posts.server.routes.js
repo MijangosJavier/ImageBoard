@@ -9,7 +9,7 @@ var postsPolicy = require('../policies/posts.server.policy'),
 module.exports = function (app) {
   // posts collection routes
   app.route('/api/posts').all(postsPolicy.isAllowed)
-    .get(posts.list)
+    // .get(posts.list)
     .post(posts.create);
 
   // Single post routes
@@ -17,6 +17,9 @@ module.exports = function (app) {
     .get(posts.read)
     .put(posts.update)
     .delete(posts.delete);
+
+  app.route('/api/posts/list/:postId').all(postsPolicy.isAllowed)
+    .get(posts.list);
 
   // Finish by binding the post middleware
   app.param('postId', posts.postByID);
