@@ -33,7 +33,7 @@ if (useS3Storage) {
 exports.create = function (req, res) {
   var post = new Post(req.body);
   var user = req.user;
-  
+
   post.name = user ? (req.body.name ? post.name : user.displayName) : post.name;
   post.isUser = !!user;
 

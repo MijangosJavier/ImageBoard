@@ -12,7 +12,7 @@
     <a ng-repeat="thread in vm.filteredItems" ui-sref="posts.view({ postId: thread.post[0]._id })" class="list-group-item">
       <div hidden ng-model="file" ng-init="file=thread.post[0].content.fileAttached"></div>
       <div class="container-fluid row">
-        <div class="col-sm-12">
+        <div >
           <small>
             File:
             <span ng-if="file.origFileName.length > 30"><span ng-bind="file.origFileName.slice(0,25)" title="{{file.origFileName}}"></span>...</span>
@@ -21,33 +21,34 @@
             <span ng-if="(file.weight > 1024) &&(file.weight < 1048576)"><span ng-bind="(file.weight/1024).toFixed(0)"></span> KB </span>
             <span ng-if="(file.weight > 1048576)"><span ng-bind="((file.weight/1024)/1024).toFixed(1)"></span> MB </span>
             <span ng-bind="file.width"></span>
-            <span ng-if="file.height">x</span><span ng-bind="file.height"></span>)
+            <span ng-if="file.height">x </span><span ng-bind="file.height"></span>)
           </small>
         </div>
-        <div class="col-sm-3">
+        <div class="reply-File">
           <div>
-            <img ng-if="((file.height >= file.width) && (file.height >= 250))" ng-src="{{file.fileURL}}" style="height: 250px; width: auto;">
-            <img ng-if="((file.height >= file.width) && (file.height < 250))" ng-src="{{file.fileURL}}">
-            <img ng-if="((file.height < file.width) && (file.height >= 250))" ng-src="{{file.fileURL}}" style="height: auto; width: 250px;">
-            <img ng-if="((file.height < file.width) && (file.height < 250))" ng-src="{{file.fileURL}}">
-            <video ng-if="file.mimetype === 'video/webm'" width="250" height="auto" autoplay loop controls muted>
+            <img ng-if="file.mimetype !== 'video/webm'" ng-class="{'w-img-OP':((file.height < file.width) && (file.width >= 325)),'h-img-OP':((file.height >= file.width) && (file.height >= 325))}" ng-src="{{file.fileURL}}" class="reply-thumbnile">
+<!--             <img ng-if="((file.height >= file.width) && (file.height >= 325))" ng-src="{{file.fileURL}}" style="height: 325px; width: auto;">
+            <img ng-if="((file.height >= file.width) && (file.height < 325))" ng-src="{{file.fileURL}}">
+            <img ng-if="((file.height < file.width) && (file.height >= 325))" ng-src="{{file.fileURL}}" style="height: auto; width: 325px;">
+            <img ng-if="((file.height < file.width) && (file.height < 325))" ng-src="{{file.fileURL}}"> -->
+            <video ng-if="file.mimetype === 'video/webm'" width="325" height="auto" autoplay loop controls muted class="reply-thumbnile">
               <source ng-src="{{file.fileURL}}" type="video/webm">
             </video>
           </div>   
         </div>
-        <div class="col-sm-9">
+        <div>
           <div>
             <strong ng-show="thread.topic !== ''" ng-bind="thread.topic"></strong>
             <small class="list-group-item-text">
-              <span ng-show="(thread.post[0].isUser && thread.post[0].name!=='Anonymous')">##</span>
-              <span ng-bind="thread.post[0].name"></span>
+              <strong><span ng-show="(thread.post[0].isUser && thread.post[0].name!=='Anonymous')">##</span>
+              <span ng-bind="thread.post[0].name"></span></strong>
                (ID:<span ng-bind="thread.post[0].specialID"></span>) 
               <span ng-bind="thread.created | date:'MM/d/yy(EEE) HH:mm:ss'"></span> 
                No. <span ng-bind="thread.number"></span> 
           </small>
           </div>
           <div>
-            <p ng-bind="thread.post[0].content.comment"></p>
+            <p ng-bind="thread.post[0].content.comment"  class="post-comment"></p>
           </div>
         </div>
       </div>

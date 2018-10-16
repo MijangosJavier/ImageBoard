@@ -10,7 +10,7 @@
   function PostsController($scope, $state, $window, $timeout, post, Authentication, Upload, Notification, PostsService, ListPostsService) {
     var vm = this;
 
-    console.log(post);
+    console.log(post[0].threadParent);
     // vm.posts = new ListPostsService().getList(post); //new ListPostsService.query(); ////post.getList(); //PostsService.query();
     vm.posts = post;
     vm.post = /*post;*/new PostsService();
@@ -94,6 +94,8 @@
 
         }
 
+        vm.post.threadParent = vm.posts[0].number;
+        console.log("VMPOST: ", vm.post.threadParent);
         vm.post.specialID = vm.post.getSpecialID(vm.post.isOP, vm.post.threadParent);
 
         // Create a new post, or update the current instance
@@ -114,7 +116,7 @@
       }
 
       function successCallback(res) {
-        $state.go('posts.list'); // should we send the User to the list or the updated post's view?
+        $state.reload();//$state.go('posts.view', {postId: vm.posts[0]._id.toString()}/*'threads.list'*/);// $state.go('posts.list'); // should we send the User to the list or the updated post's view?
         Notification.success({ message: '<i class="glyphicon glyphicon-ok"></i> Post saved successfully!' });
       }
 

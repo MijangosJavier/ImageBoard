@@ -1,0 +1,69 @@
+
+.container{
+	margin-left: 10px;
+	margin-right: 0px;
+	width: 98%;;
+}
+
+.list-group{
+	border: hidden;
+	box-shadow: transparent;
+	display:flex;
+	flex-flow: column nowrap;
+}
+
+.list-group-item{
+	display: block;
+}
+
+.OP-post{
+	width: 100%;
+	background-color: #333;
+	color: white;
+}
+
+.reply-post{
+	width: 80%;
+}
+
+.reply-File{
+	float: left;
+}
+
+.reply-thumbnile{
+	margin-right: 10px; 
+	cursor: pointer;
+	max-width: 100%;
+}
+
+.w-img-OP{
+	height: auto; 
+	width: 325px;
+}
+
+.h-img-OP{
+	height: 325px;
+	width: auto
+}
+
+.w-img{
+	height: auto; 
+	width: 125px;
+}
+
+.h-img{
+	height: 125px;
+	width: auto
+}
+
+.post-comment{
+	overflow-wrap: break-word;
+	margin: 10px;
+}
+
+.fake-link{
+	color: blue;
+	text-decoration: underline;
+	cursor: pointer;
+}
+

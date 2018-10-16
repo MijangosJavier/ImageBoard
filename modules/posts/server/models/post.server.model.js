@@ -113,7 +113,7 @@ PostSchema.pre('save', function (next) {
     this.findLastPost()
       .then(function (lastPost){
         _this.number = lastPost !== null ? lastPost.number + 1 : 1;
-        _this.threadParent= _this.isOP ? _this.number : 1/*Must be post.threadPatent OR Number of thrad*/;
+        _this.threadParent= _this.isOP ? _this.number : _this.threadParent/*Must be post.threadPatent OR Number of thrad*/;
         next();
       })
       .catch(function (err) {
