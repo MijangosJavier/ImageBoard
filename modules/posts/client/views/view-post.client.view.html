@@ -1,4 +1,9 @@
 <section>
+  <div id="top">
+    <hr>
+    [<span class="fake-link" ng-click="vm.scrollTo('bottom')">Bottom</span>]
+    <hr>
+  </div>
 <!--   <div class="page-header">
     <h1 ng-bind="vm.post.title"></h1>
   </div>
@@ -19,8 +24,7 @@
       <div hidden ng-model="file" ng-init="file = reply.content.fileAttached"></div>
       <div hidden ng-model="reply.hidethumb" ng-init="reply.hidethumb = false"></div>
       <!-- <div class="container-fluid row" style=""> -->
-      <div >
-        <!-- <div class="col-sm-12"> -->
+      <div>
         <div>
           <div ng-if="!reply.isOP">
             <div>
@@ -78,8 +82,10 @@
               </span>
           </small>
           </div>
-          <div>
-            <p ng-bind="reply.content.comment" class="post-comment"></p>
+          <div ng-bind-html="reply.formattedComment" class="post-comment">
+            <!-- <p ng-bind="reply.formattedComment" class="post-comment"></p> -->
+            <!-- <p id="comment{{reply.number}}" ng-bind="reply.content.comment" class="post-comment" ng-init="vm.formatComment('comment' + reply.number, reply)"></p> -->
+            <!-- <p id="comment{{reply.number}}" class="post-comment" after-render="formatComment"></p> -->
           </div>
         </div>
       </div>
@@ -158,5 +164,10 @@
     </form>
     </div>
   </div>
-
+  <div id="bottom">
+    <hr>
+    [<span class="fake-link" ng-click="vm.scrollTo('top')">Top</span>] [<span class="fake-link" ng-click="vm.refresh()">Refresh</span>]
+    <hr>
+  </div>
+  <!-- <div data-ng-init="formatComment()"></div> -->
 </section>

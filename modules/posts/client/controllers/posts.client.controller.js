@@ -2,12 +2,12 @@
   'use strict';
 
   angular
-    .module('posts')
+    .module('posts', ['ngSanitize'])
     .controller('PostsController', PostsController);
 
-  PostsController.$inject = ['$scope', '$state', '$window','$timeout', 'postResolve', 'Authentication', 'Upload', 'Notification', 'PostsService', 'ListPostsService'];
+  PostsController.$inject = ['$scope', '$state', '$window','$timeout', 'postResolve', 'Authentication', 'Upload', 'Notification', 'PostsService', 'ListPostsService', '$sce'];
 
-  function PostsController($scope, $state, $window, $timeout, post, Authentication, Upload, Notification, PostsService, ListPostsService) {
+  function PostsController($scope, $state, $window, $timeout, post, Authentication, Upload, Notification, PostsService, ListPostsService, $sce) {
     var vm = this;
     // vm.posts = new ListPostsService().getList(post); //new ListPostsService.query(); ////post.getList(); //PostsService.query();
     vm.posts = post;
@@ -21,7 +21,9 @@
     vm.showF = showFloatingForm;
     vm.hideF = hideFloatingForm;
     vm.scrollTo = scrollTo;
-    
+    vm.refresh = refresh;
+    formatComment();
+    // $scope.formatComment = formatComment;
 
     // Remove existing post
     function remove() {
@@ -236,9 +238,129 @@
     }
 
     function scrollTo(elemID){
+      var currentFocusedElem = document.querySelector(".focused");
+
+      if(!!(currentFocusedElem)){
+        currentFocusedElem.classList.remove("focused");
+      }
+      
       var elmnt = document.getElementById(elemID);
+      elmnt.classList.add("focused");
       elmnt.scrollIntoView({ block:"center"});
     }
+
+    function refresh(){
+      $state.reload();
+    }
+
+    function formatComment(){
+      for(var key in vm.posts){
+        var obj = vm.posts[key];
+
+        if(!!(obj.content && obj.content.comment)){
+          var origStr = obj.content.comment;
+          var parentElem =  "<p>"//document.createElement("P");//document.querySelector("#comment" + obj.number);//document.getElementById(idElem);
+          //console.log(document.querySelector("#comment" + 13));
+
+          function findLink(str){
+
+            var startLinkIndex = str.indexOf(">>");
+              
+            if(startLinkIndex === -1){
+              // var text = document.createTextNode(str);
+              // parentElem.appendChild(text);
+              var text = str;
+              parentElem = parentElem + text;
+              return;
+            }
+
+            if(startLinkIndex > 0){
+              // var text = document.createTextNode(str.substr(0 , startLinkIndex));
+              // parentElem.appendChild(text);
+              var text = str.substr(0 , startLinkIndex);
+              parentElem = parentElem + text;
+            }
+
+            var res = str.substr(startLinkIndex, str.length);
+            var validLink = /^>>[0-9]/.test(res);
+
+            if(validLink){
+              var link=res.substr(0, 3);
+              var lastIndex=3;
+              for(var i=3; i < res.length; i++){
+                if(/[0-9]/.test(res[i])){
+                  link = link + res[i];
+                  lastIndex=i;
+                }else{
+                  lastIndex=i;
+                  break;
+                }
+              }
+              res = res.substr(lastIndex, res.length);
+              //replies.push(link);
+              var linkNumber = Number(link.substr(2, link.length));
+              var spanLink = "<span>"//document.createElement("SPAN");
+              var text = link;//document.createTextNode(link);
+              // spanLink.appendChild(text);
+              
+
+              function postExist(elemNum){
+                for(var key in vm.posts){
+                  var objPost = vm.posts[key];
+                  if(objPost.number === elemNum){
+                    //repliesIDs.push(objPost._id);
+                    return true;
+                  } 
+                }
+                return false;
+              }
+
+              if(postExist(linkNumber)){
+                // spanLink.classList.add("fake-link");
+                // spanLink.setAttribute("ng-click", "vm.scrollTo(linkNumber)")
+                // parentElem.appendChild(spanLink);
+                // parentElem.insertAdjacentHTML("beforeend", '<span class="fake-link" ng-click="vm.scrollTo(' +linkNumber + ')">>>' +linkNumber + '</span>'); 
+                parentElem = parentElem + '<span class="fake-link" ng-click="vm.scrollTo(' +linkNumber + ')">>>' +linkNumber + '</span>';
+              }else{
+                // spanLink.classList.add("fake-link-invalid");
+                // parentElem.appendChild(spanLink);
+                // parentElem.insertAdjacentHTML("beforeend", '<span class="fake-link-invalid" >>>' +linkNumber + '</span>'); 
+                parentElem = parentElem + '<span class="fake-link-invalid" >>>' +linkNumber + '</span>';
+              }
+            }else{
+              var lastInvalidIndex=0;
+              for(var j=0; j < res.length; j++){
+                if(/[>]/.test(res[j])){
+                  lastInvalidIndex=j;
+                }else{
+                  lastInvalidIndex=j;
+                  break;
+                }
+              }
+              // var text = document.createTextNode(res.substr(0 , lastInvalidIndex));
+              // parentElem.appendChild(text);
+              var text = res.substr(0 , lastInvalidIndex);
+              parentElem = parentElem + text;
+              res = res.substr(lastInvalidIndex, res.length);
+            }
+
+              return findLink(res);
+          }
+
+          findLink(origStr);
+          parentElem = parentElem + "</p>";
+          vm.posts[key].formattedComment = $sce.trustAsHtml(parentElem);
+          console.log(parentElem);
+        }else{
+          return;
+        }
+      }
+
+    }
+
+    // $scope.$on('$viewContentLoaded', function() {
+    //   formatComment();
+    // });
 
   }
 }());
