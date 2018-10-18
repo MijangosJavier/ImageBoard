@@ -54,7 +54,7 @@
       </div>
     </a>
   </div>
-  <ul uib-pagination items-per-page="vm.itemsPerPage" total-items="totalThreads.length" data-ng-model="vm.curPage" max-size="vm.maxSize" class="pagination-sm" boundary-links="true" force-ellipses="true" ng-change="vm.init()" ng-click="vm.goToTop()"></ul>
+  <ul ng-if="totalThreads.length > vm.itemsPerPage" uib-pagination items-per-page="vm.itemsPerPage" total-items="totalThreads.length" data-ng-model="vm.curPage" max-size="vm.maxSize" class="pagination-sm" boundary-links="true" force-ellipses="true" ng-change="vm.init()" ng-click="vm.goToTop()"></ul>
   <div class="alert alert-warning text-center" data-ng-if="vm.threads.$resolved && !vm.threads.length">
     No posts yet, why don't you <a data-ui-sref="threads.create">create one</a>?
   </div>

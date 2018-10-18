@@ -100,11 +100,7 @@ var PostSchema = new Schema({
     validate: [validateName, 'Please enter a valid name, use only alphanumeric characters'],
     maxlength: [24 , 'Name too long, max character count is 24'],
   },
-  replies:{
-    type:[{
-      type: Number,
-    }],
-  },
+  replies:[Number],
 });
 
 PostSchema.pre('save', function (next) {

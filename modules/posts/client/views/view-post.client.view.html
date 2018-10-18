@@ -15,7 +15,7 @@
   <div class="list-group">
     <!-- <div hidden data-ng-model="totalThreads" data-ng-init="totalThreads=vm.posts"></div> -->
     <!-- <div hidden data-ng-if="vm.threads.$resolved && !vm.loaded" data-ng-init="vm.init()"></div> -->
-    <div ng-repeat="reply in vm.posts" class="list-group-item" ng-class="{'OP-post':reply.isOP, 'reply-post':!reply.isOP}">
+    <div ng-repeat="reply in vm.posts" class="list-group-item" ng-class="{'OP-post':reply.isOP, 'reply-post':!reply.isOP}" id="{{reply.number}}">
       <div hidden ng-model="file" ng-init="file = reply.content.fileAttached"></div>
       <div hidden ng-model="reply.hidethumb" ng-init="reply.hidethumb = false"></div>
       <!-- <div class="container-fluid row" style=""> -->
@@ -29,7 +29,11 @@
               <span ng-bind="reply.name"></span></strong>
                (ID:<span ng-bind="reply.specialID"></span>) 
               <span ng-bind="reply.created | date:'MM/d/yy(EEE) HH:mm:ss'"></span> 
-               No. <span ng-bind="reply.number"></span> 
+               No. <span ng-bind="reply.number" class="hfake-link" ng-click="vm.showF(reply.number)"> </span>
+              <span>
+                 <span ng-repeat="backlink in reply.replies" class="fake-link backlink" ng-click="vm.scrollTo(backlink)"> >>{{backlink}} </span>
+                 <!-- <a href="#p{{backlink}}">>>{{backlink}}</a> -->
+              </span>
             </small>
             </div>
           </div>
@@ -69,7 +73,9 @@
               <span ng-bind="reply.name"></span></strong>
                (ID:<span ng-bind="reply.specialID"></span>) 
               <span ng-bind="reply.created | date:'MM/d/yy(EEE) HH:mm:ss'"></span> 
-               No. <span ng-bind="reply.number"></span> 
+               No. <span ng-bind="reply.number" class="hfake-link" ng-click="vm.showF(reply.number)"></span> <span>
+                 <span ng-repeat="backlink in reply.replies" class="fake-link backlink" ng-click="vm.scrollTo(backlink)"> >>{{backlink}}</span>
+              </span>
           </small>
           </div>
           <div>
@@ -80,16 +86,18 @@
     </div>
   </div>
 
-  <div class="col-md-12">
-    <form name="vm.form.postForm" class="form-horizontal" ng-submit="vm.save(vm.form.postForm.$valid)" novalidate>
+  <div ng-if="!vm.floatingForm" class="col-md-12 centered">
+  <!-- <div ng-class="{'floating-form': vm.floatingForm, 'col-md-12': !vm.floatingForm, centered :  !vm.floatingForm}">  -->
+    <div class="container-fluid">
+    <form id="post-form" name="vm.form.postForm" class="form-horizontal" ng-submit="vm.save(vm.form.postForm.$valid)" novalidate>
       <fieldset>
         <div class="form-group">
           <label class="control-label" for="name">Name</label>
           <input name="name" type="text" ng-model="vm.post.name" id="name" class="form-control" placeholder="{{vm.authentication.user ? vm.authentication.user.displayName : 'Anonymous'}}" maxlength="24">
         </div>
         <div class="form-group">
-          <label class="control-label" for="comment">Comment</label>
-          <textarea name="comment" data-ng-model="vm.post.content.comment" id="comment" class="form-control" cols="30" rows="10" placeholder="Comment" autofocus></textarea>
+          <label class="control-label" for="commentF">Comment</label>
+          <textarea name="comment" data-ng-model="vm.post.content.comment" id="comment" class="form-control" cols="30" rows="4" placeholder="Comment"></textarea>
         </div>
         <div ng-show="!vm.fileSelected" class="form-group">
           <button  class="btn btn-default btn-file" ngf-select="(vm.fileSelected = true) && (vm.loading = false)" ng-model="picFile" accept="image/*, video/webm"  ngf-validate="{size: {max: '5MB'}, height: {max: 12000}, width: {max: 12000}}">Select Picture</button>
@@ -98,16 +106,57 @@
           <button type="button" class="btn btn-default" ng-click="vm.fileSelected = false" >Cancel</button>
           <small class="text-muted">{{picFile ? picFile.name : 'Not file selected'}}</small>
         </div>
+        <div class="form-group">
+          <button ng-click="vm.loading = true" type="submit" class="btn btn-primary">Create</button>
+        </div>
         <div ng-show="(vm.fileSelected && vm.loading)" class="progress text-center">
           <div class="progress-bar" role="progressbar" aria-valuenow="{{vm.progress}}" aria-valuemin="0" aria-valuemax="100" style="width:{{vm.progress}}%" ng-bind="vm.progress + '%'">
             <span class="sr-only">{{vm.progress}}% Complete</span>
           </div>
         </div>
-        <div class="form-group">
-          <button ng-click="vm.loading = true" type="submit" class="btn btn-default">Create</button>
-        </div>
+        <!-- <div class="form-group">
+          <button ng-click="vm.loading = true" type="submit" class="btn btn-primary">Create</button>
+        </div> -->
       </fieldset>
     </form>
+    </div>
+  </div>
+
+  <div class="floating-form" ng-class="{'hide-form':!vm.floatingForm}">
+  <!-- <div ng-class="{'floating-form': vm.floatingForm, 'col-md-12': !vm.floatingForm, centered :  !vm.floatingForm}">  -->
+    <div class="close-form"><button type="button" class="btn btn-danger" ng-click="vm.hideF()">X</button></div>
+    <div class="container-fluid">
+    <form id="post-form" name="vm.form.postFormFloating" class="form-horizontal" ng-submit="vm.save(vm.form.postFormFloating.$valid)" novalidate>
+      <fieldset>
+        <div class="form-group">
+          <label class="control-label" for="name">Name</label>
+          <input name="name" type="text" ng-model="vm.post.name" id="name" class="form-control" placeholder="{{vm.authentication.user ? vm.authentication.user.displayName : 'Anonymous'}}" maxlength="24">
+        </div>
+        <div class="form-group">
+          <label class="control-label" for="comment">Comment</label>
+          <textarea name="comment" data-ng-model="vm.post.content.comment" id="comment" class="form-control" cols="30" rows="4" placeholder="Comment" autofocus="{{vm.floatingForm}}"></textarea>
+        </div>
+        <div ng-show="!vm.fileSelected" class="form-group">
+          <button  class="btn btn-default btn-file" ngf-select="(vm.fileSelected = true) && (vm.loading = false)" ng-model="picFile" accept="image/*, video/webm"  ngf-validate="{size: {max: '5MB'}, height: {max: 12000}, width: {max: 12000}}">Select Picture</button>
+        </div>
+        <div ng-show="vm.fileSelected" class="form-group">
+          <button type="button" class="btn btn-default" ng-click="vm.fileSelected = false" >Cancel</button>
+          <small class="text-muted">{{picFile ? picFile.name : 'Not file selected'}}</small>
+        </div>
+        <div class="form-group">
+          <button ng-click="vm.loading = true" type="submit" class="btn btn-primary">Create</button>
+        </div>
+        <div ng-show="(vm.fileSelected && vm.loading)" class="progress text-center">
+          <div class="progress-bar" role="progressbar" aria-valuenow="{{vm.progress}}" aria-valuemin="0" aria-valuemax="100" style="width:{{vm.progress}}%" ng-bind="vm.progress + '%'">
+            <span class="sr-only">{{vm.progress}}% Complete</span>
+          </div>
+        </div>
+        <!-- <div class="form-group">
+          <button ng-click="vm.loading = true" type="submit" class="btn btn-primary">Create</button>
+        </div> -->
+      </fieldset>
+    </form>
+    </div>
   </div>
 
 </section>

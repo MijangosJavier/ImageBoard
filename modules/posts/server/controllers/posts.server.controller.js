@@ -31,6 +31,7 @@ if (useS3Storage) {
  * Create a post
  */
 exports.create = function (req, res) {
+  var idList = req.body.IDList;
   var post = new Post(req.body);
   var user = req.user;
 
@@ -47,6 +48,20 @@ exports.create = function (req, res) {
           message: errorHandler.getErrorMessage(err)
         });
       }else {
+        idList.forEach(function (elem){
+          Post.findById(elem).exec(function (err, postToUpdate) {
+            if (err) {
+              //Do nothing
+            } else if (postToUpdate) {
+              postToUpdate.replies.set(postToUpdate.replies.length , reqPost.number);
+              postToUpdate.save(function (err) {
+                if (err) {
+                } else {
+                }
+              });
+            }
+          });
+        });
         res.json(reqPost);
       }
     });
@@ -169,18 +184,6 @@ exports.uploadFile = function (req, res) {
  */
 exports.read = function (req, res) {
   // convert mongoose document to JSON
-  // 
-  // Post.find({threadParent: req.post.number}).sort('-created').exec(function (err, posts) {
-  //   if (err) {
-  //     return res.status(422).send({
-  //       message: errorHandler.getErrorMessage(err)
-  //     });
-  //   } else {
-  //     console.log(typeof res.json(posts));
-  //     // res.json(posts);
-  //   }
-  // });
-  console.log("HIIIII");
   var post = req.post ? req.post.toJSON() : {};
 
   // Add a custom field to the Post, for determining if the current User is the "owner".
@@ -195,9 +198,6 @@ exports.read = function (req, res) {
  */
 exports.update = function (req, res) {
   var post = req.post;
-
-  post.title = req.body.title;
-  post.content = req.body.content;
 
   post.save(function (err) {
     if (err) {
@@ -231,9 +231,6 @@ exports.delete = function (req, res) {
  * List of posts
  */
 exports.list = function (req, res) {
-  // Post.find().sort('-created').populate('user', 'displayName').exec(function (err, posts) {
-  // Post.find().sort('-created').exec(function (err, posts) {
-  console.log('LIST req', req.post);
   Post.find({threadParent: req.post.number}).sort('created').exec(function (err, posts) {
     if (err) {
       return res.status(422).send({
@@ -256,7 +253,6 @@ exports.postByID = function (req, res, next, id) {
     });
   }
 
-  // Post.findById(id).populate('user', 'displayName').exec(function (err, post) {
     Post.findById(id).exec(function (err, post) {
     if (err) {
       return next(err);
