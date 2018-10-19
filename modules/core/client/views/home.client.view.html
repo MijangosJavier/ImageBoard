@@ -6,79 +6,100 @@
       </div>
     </div>
     <br>
-    <div class="row">
-      <p class="lead">
-        Open-Source Full-Stack Solution For MEAN Applications
-      </p>
-    </div>
-    <div class="row">
-      <p>
-        <a class="btn btn-primary btn-lg" href="https://meanjs.org" target="_blank" rel="noopener">Learn more</a>
-      </p>
-    </div>
   </div>
   <div>
-    <h2>Congrats! You've configured and run the sample application.</h2>
-    <p>MEAN.JS is a web application boilerplate, which means you should start changing everything :-)</p>
-    <p>This sample application tracks users and articles.</p>
-    <ul>
-      <li>
-        Click
-        <em>Sign Up</em> to get started.
-      </li>
-      <li>
-        Configure your app to work with your social accounts, by editing the
-        <em>/config/env/*.js</em> files.
-      </li>
-      <li>
-        Edit your users module.
-      </li>
-      <li>
-        Add new CRUD modules.
-      </li>
-      <li>
-        Have fun...
-      </li>
-    </ul>
+    <h2>What is an image board?</h2>
+    <p>An imageboard or image board is a type of Internet forum which operates mostly via posting images. The first imageboards were created in Japan, and inspired the creation of a number of English language imageboards. They are based on the textboard concept.</p>
+    <p>Imageboards are similar to bulletin board systems, are used for discussions of a variety of topics. Imageboards are also different from online galleries in that most of the works posted are not made by the poster, but instead are taken from other online sources: galleries, other imageboards, and edited pictures.</p>
   </div>
-  <div class="row">
-    <div class="col-md-3">
-      <h2><strong>M</strong>ongoDB</h2>
-      <p><a target="_blank" href="https://www.mongodb.com/" rel="noopener">MongoDB</a> is a NoSQL database. MongoDB's <a target="_blank" href="https://docs.mongodb.com/manual/" rel="noopener">great manual</a> is the place to get started with NoSQL and MongoDB.</p>
-    </div>
-    <div class="col-md-3">
-      <h2><strong>E</strong>xpress</h2>
-      <p><a target="_blank" href="https://expressjs.com/" rel="noopener"> Express</a> is a NodeJS server-side application web framework. Check out <a target="_blank" href="https://expressjs.com/en/4x/api.html" rel="noopener">The ExpressJS API reference for more information</a>.</p>
-    </div>
-    <div class="col-md-3">
-      <h2><strong>A</strong>ngularJS</h2>
-      <p><a target="_blank" href="https://angularjs.org/" rel="noopener">AngularJS</a> is client-side web application framework. The <a target="_blank" href="https://thinkster.io/" rel="noopener">Thinkster Popular Guide</a> and <a target="_blank" href="https://egghead.io/" rel="noopener">Egghead Videos</a> are great resources.</p>
-    </div>
-    <div class="col-md-3">
-      <h2><strong>N</strong>ode.js</h2>
-      <p><a target="_blank" href="https://nodejs.org/" rel="noopener">Node.js</a> is a JavaScript run-time, popular for being a web server platform. Node's website and this <a target="_blank" href="https://stackoverflow.com/questions/2353818/how-do-i-get-started-with-node-js" rel="noopener">stackOverflow thread</a> offer excellent starting points to get to grasps with node.</p>
-    </div>
-  </div>
-  <div class="well">
-    <h2>MEAN.JS Documentation</h2>
+  <div class="well howTo" >
+    <h2 class="text-center">How to image board?</h2>
+    <h3>The basic stuff</h3>
     <p>
-      Once you're familiar with the foundation technology, check out the MEAN.JS Documentation:
       <ul>
-        <li><a target="_blank" href="https://meanjs.org/docs.html" rel="noopener">MEAN.JS Documentation</a>
-        </li>
-        <!-- <li><a target="_blank" href="https://meanjs.org/generator.html" rel="noopener">Yeoman Generator</a>
-				</li> -->
-        <li><a target="_blank" href="https://meanjs.org/modules.html" rel="noopener">Modules</a>
-        </li>
-        <li><a target="_blank" href="https://meanjs.org/changelog.html" rel="noopener">Changelog</a>
-        </li>
-        <li><a target="_blank" href="https://meanjs.org/community.html" rel="noopener">Community</a>
-        </li>
-        <li><a target="_blank" href="http://blog.meanjs.org" rel="noopener">Blog</a>
-        </li>
+        <li>You don't need to be registered (but you can), you can be anonymous. But we use cookies to assign special IDs to a post, this way you can see if you are talking with the same person or not</li>
+        <li>In the navigation bar (top of the page) you can find the Threads button to list the actual threads on the board.</li>
+        <li>Each thread can have multiple posts discussing a topic.</li>
+        <li>The list of threads is ordered from newest to oldest. In the list the threads are shown 6 prer page, use the pagination at the end of the list of threads</li>
       </ul>
     </p>
+    <h3>Threads</h3>
+    <ul>
+      <li>A thread can have a especific topic, but it's optional.</li>
+      <li>To create a thread you need to make a post, the thread post need to have a file attached to them and a comment.</li>
+      <li>The person that makes a thread (and the first post) is called OP (Original Poster).</li>
+    </ul>
+    <h3>Posts</h3>
+    <p>A normal post looks like this:</p>
+    <div class="list-group">
+    <div  class="list-group-item" class="reply-post" id="42">
+      <div>
+        <div>
+          <div>
+            <div>
+            <small class="list-group-item-text">
+              <strong>Anonymous</strong>
+               (ID:<span>vd8FqqhU</span>) 
+              <span> 10/17/18(Wed) 16:48:22</span> 
+               No. <span  class="hfake-link">42 </span>
+               <button type="button" class="btn btn-default btn-xs btn-reply" title="Reply"><span class="glyphicon glyphicon-triangle-right" aria-hidden="true"></span></button> 
+              <span>
+                 <span class="fake-link backlink" > >>43 </span>
+                 <span class="fake-link backlink" > >>55 </span>
+              </span>
+            </small>
+            </div>      
+          </div>
+          <small >
+            File:
+            <span>default.png</span>
+            (<span > 64.2 KB 128 x 128</span>)
+          </small>
+        </div>
+        <div >
+          <div ng-model="hidethumb" ng-init="hidethumb=false">
+            <img ng-if="!hidethumb" src="/modules/users/client/img/profile/default.png"  class="reply-thumbnile reply-File w-img" ng-click="hidethumb = true" >
+            <img ng-if="hidethumb" src="modules/users/client/img/profile/default.png" class="reply-thumbnile" ng-click="hidethumb = false">
+          </div>   
+        </div>
+        <div>
+          <div class="post-comment"><p>This is a coment<br> This is a reply link to another post in the thread (No. 20):<br><span class="fake-link">>>20</span><br>This is a reply to the Original poster:<br><span class="fake-link">>>30(OP)</span><br><br>This is a reply to a post that I made earlier:<br><span class="fake-link">>>33(you)</span><br>This is a reply to a post that have been deleted or doesn't exist inside the thread:<br><span class="fake-link-invalid">>>100</span></p></div>
+        </div>
+      </div>
+    </div>
   </div>
-  <br>Enjoy &amp; Keep Us Updated,
-  <br>The MEAN.JS Team.
+
+  <p>At the top of the post is the information section:</p>
+  <ul>
+    <li>The name of the poster. Default is Anonymous. When creating a post there is a field to put a name if you want. If you are signed in the name would be preceded by two <em>#</em> characters (i.e. ##username).</li>
+    <li>The special ID. You would have an unique ID for each thread. This IDs are tracked with cookies.</li>
+    <li>The dete and time when the post was made. The format of the date is Day/month/year.</li>
+    <li>Number of the post. If you click the number you can reply to that post. This numbers are global on the page, that means that a thread doesn't start with <em>No. 1</em>, it continues from the last post in the database.</li>
+    <li>The reply button. If you find hard to clic the number of the post to reply, you can just clic the arrow button and it would work the same.</li>
+    <li>The reply links. This are links to post that have replied to that post, you can click on them and they will scroll to the replies.</li>
+  </ul>
+
+  <p>The next section is the file information:</p>
+  <ul>
+    <li>The name and type of the file. Posts accepts formats: <em>.jpg, .png, .gif and video .webm</em>.
+    </li>
+    <li>The size in B, KB or MB. Posts accepts 5MB or less.</li>
+    <li>The width and height of the file, if it's a video this isn't shown.</li>
+    <li>If there is no file attached the file information section is not shown.</li>
+  </ul>
+
+  <p>The last section is the content:</p>
+  <ul>
+    <li>In the left, the thumbnail of the file. If the file is larget than 125 px in width or height is going to be resized. You can clic on it to enlarge it. Clic again to make it smaller again. Files smaller than 125 px will not be resized nor can be enlarged.</li>
+    <li>If there is no file attached this section is not going to appear.</li>
+    <li>In the right, the comment of the post. A normal post (Not OP) must have either a file or a comment, can have both, can not be empty.</li>
+    <li>A comment can have up to 2000 characters.</li>
+    <li>Comments can have links to other posts inside the thread. This links allways need to have the <em>>></em> characters to be identified as post links. If you clic on them they will scroll you to that comment.</li>
+    <li>A link that ends with <em>(OP)</em> means that if you clic on it, it will sroll to the first post of the thread.</li>
+    <li>A link that ends with <em>(you)</em> means that it's a reply to one of your post inside the thread.</li>
+    <li>A link that is corssed by a line is an invalid link. It's either a deleted post or that number doesn't exist inside the thread.</li>
+    <li>Editing or deleting posts is not posible, only Administrators can do it. It's the same for threads.</li>
+  </ul>
+
+  </div>
 </section>

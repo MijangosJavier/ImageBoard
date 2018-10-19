@@ -19,11 +19,12 @@
                (ID:<span ng-bind="reply.specialID"></span>) 
               <span ng-bind="reply.created | date:'MM/d/yy(EEE) HH:mm:ss'"></span> 
                No. <span ng-bind="reply.number" class="hfake-link" ng-click="vm.showF(reply.number)"> </span>
+               <button type="button" class="btn btn-default btn-xs btn-reply" ng-click="vm.showF(reply.number)" title="Reply"><span class="glyphicon glyphicon-triangle-right" aria-hidden="true"></span></button> 
               <span>
                  <span ng-repeat="backlink in reply.replies" class="fake-link backlink" ng-click="vm.scrollTo(backlink)"> >>{{backlink}} </span>
               </span>
             </small>
-            </div>
+            </div>      
           </div>
           <small ng-if="file">
             File:
@@ -60,7 +61,9 @@
               <span ng-bind="reply.name"></span></strong>
                (ID:<span ng-bind="reply.specialID"></span>) 
               <span ng-bind="reply.created | date:'MM/d/yy(EEE) HH:mm:ss'"></span> 
-               No. <span ng-bind="reply.number" class="hfake-link" ng-click="vm.showF(reply.number)"></span> <span>
+               No. <span ng-bind="reply.number" class="hfake-link" ng-click="vm.showF(reply.number)"></span>
+               <button type="button" class="btn btn-default btn-xs btn-reply-OP" ng-click="vm.showF(reply.number)" title="Reply"><span class="glyphicon glyphicon-triangle-right" aria-hidden="true" ></span></button> 
+               <span>
                  <span ng-repeat="backlink in reply.replies" class="fake-link backlink" ng-click="vm.scrollTo(backlink)"> >>{{backlink}}</span>
               </span>
           </small>

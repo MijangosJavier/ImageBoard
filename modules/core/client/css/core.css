@@ -41,3 +41,8 @@ a:hover .header-profile-image {
 .has-error .help-inline.error-text {
   display: inline;
 }
+
+.howTo{
+  padding-right: 10%;
+  padding-left: 10%;
+}
