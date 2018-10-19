@@ -22,11 +22,6 @@
           <label class="control-label" for="comment">Comment</label>
           <textarea name="comment" data-ng-model="vm.post.content.comment" id="comment" class="form-control" cols="30" rows="10" placeholder="Comment" autofocus></textarea>
         </div>
-        <!-- <div class="form-group"> -->
-          <!-- <button class="btn btn-default btn-file" ngf-select="(vm.fileSelected = true) && (vm.loading = false)" ng-model="picFile" accept="image/*, video/webm" ngf-before-model-change="vm.loading = true"  ngf-validate="{size: {max: '5MB', min: '10B'}, height: {max: 12000}, width: {max: 12000}}">Select File</button> -->
-          <!-- <button class="btn btn-default btn-file" ngf-select="(vm.fileSelected = true) && (vm.loading = false)" ng-model="picFile" accept="image/*" ngf-before-model-change="vm.loading = true" ngf-resize="{width: 400}" ngf-resize-if="$width > 400 || $height > 400">Select File</button> -->
-          <!-- <input type="file" class="btn btn-default btn-file" ngf-select="(vm.fileSelected = true) && (vm.loading = false)" ng-model="picFile" accept="image/*, video/webm" ngf-before-model-change="vm.loading = true"  ngf-validate="{size: {max: '5MB', min: '10B'}, height: {max: 12000}, width: {max: 12000}}"> -->
-        <!-- </div> -->
         <div ng-show="!vm.fileSelected" class="form-group">
           <button  class="btn btn-default btn-file" ngf-select="(vm.fileSelected = true) && (vm.loading = false)" ng-model="picFile" accept="image/*, video/webm"  ngf-validate="{size: {max: '5MB'}, height: {max: 12000}, width: {max: 12000}}">Select Picture</button>
         </div>

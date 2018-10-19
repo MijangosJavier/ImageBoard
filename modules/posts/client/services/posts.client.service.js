@@ -24,10 +24,6 @@
       getSpecialID: function(isOP, threadNumber) {
         return getSpecialID(isOP, threadNumber);
       },
-      // getList: function(){
-      //   var post = this;
-      //   return getList(post);
-      // }
 
     });
 
@@ -53,21 +49,6 @@
       }
     }
 
-    // function getList(post) {
-    //   return post.$get(onSuccess, onError);
-
-    //   function onSuccess(post) {
-    //     // Any required internal processing from inside the service, goes here.
-    //   }
-
-    //   // Handle error response
-    //   function onError(errorResponse) {
-    //     var error = errorResponse.data;
-    //     // Handle error internally
-    //     handleError(error);
-    //   }
-    // }
-
     function setCookie(threadNumber, specialID, exdays) {
       var d = new Date();
       d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
@@ -92,7 +73,7 @@
 
     function getSpecialID(isOP=false, threadNumber){
       if(!isOP){
-        threadNumber = 2;//placeholder should be the real number
+        // threadNumber = 2;//placeholder should be the real number
         threadNumber = threadNumber.toString();
 
         var cSpecialID = getCookie(threadNumber);

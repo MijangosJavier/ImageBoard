@@ -72,7 +72,7 @@
 
     function getSpecialID(isOP=false, threadNumber){
       if(!isOP){
-        threadNumber = 2;//placeholder should be the real number
+        //threadNumber = 2;//placeholder should be the real number
         threadNumber = threadNumber.toString();
 
         var cSpecialID = getCookie(threadNumber);
