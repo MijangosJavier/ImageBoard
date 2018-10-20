@@ -16,11 +16,10 @@ exports.create = function (req, res) {
   var post = new Post(req.body);
   var thread = new Thread(req.body);
   var user = req.user;
-  
-  post.name = user ? (req.body.name ? post.name : user.displayName) : post.name;
+  post.name = (user && !req.body.name) ? user.displayName : post.name;
   post.isUser = !!user;
 
-  var TrySaveThread = function(reqThread, savedPost, res){
+  var trySaveThread = function (reqThread, savedPost, res) {
     reqThread.number = savedPost.number;
     reqThread.save(function (err) {
       if (err) {
@@ -28,35 +27,28 @@ exports.create = function (req, res) {
           message: errorHandler.getErrorMessage(err)
         });
       } else {
-        //res.json(reqThread);
         res.json(savedPost);
       }
-    });    
-  }
+    });
+  };
 
-  var TrySavePost = function(reqPost, res){
-    reqPost.save(function(err, savedPost){
-      if(err && err.code === 11000){//Repited index (Post number)
+  var trySavePost = function (reqPost, res) {
+    reqPost.save(function (err, savedPost) {
+      if (err && err.code === 11000) {// Repited index (Post number)
         reqPost.number++;
-        TrySave(reqPost, res);
-      }else if(err){
+        trySavePost(reqPost, res);
+      } else if (err) {
         return res.status(422).send({
           message: errorHandler.getErrorMessage(err)
         });
-      }else {
+      } else {
         // console.log(savedPost);
-        TrySaveThread(thread, savedPost, res);
+        trySaveThread(thread, savedPost, res);
       }
     });
-  }
+  };
 
-  TrySavePost(post, res);
-
-
-  // 
-  // thread.user = req.user;
-
-
+  trySavePost(post, res);
 };
 
 /**
@@ -114,23 +106,23 @@ exports.delete = function (req, res) {
  * List of threads
  */
 exports.list = function (req, res) {
- // Thread.find().sort('-created').populate('user', 'displayName').exec(function (err, threads) {
   Thread.aggregate([{ $lookup:
-     {
-       from: 'posts',
-       localField: 'number',
-       foreignField: 'threadParent',
-       as: 'post'
-     }}])
-  .sort('-created').exec(function (err, threads) {
-    if (err) {
-      return res.status(422).send({
-        message: errorHandler.getErrorMessage(err)
-      });
-    } else {
-      res.json(threads);
+    {
+      from: 'posts',
+      localField: 'number',
+      foreignField: 'threadParent',
+      as: 'post'
     }
-  });
+  }])
+    .sort('-created').exec(function (err, threads) {
+      if (err) {
+        return res.status(422).send({
+          message: errorHandler.getErrorMessage(err)
+        });
+      } else {
+        res.json(threads);
+      }
+    });
 };
 
 /**

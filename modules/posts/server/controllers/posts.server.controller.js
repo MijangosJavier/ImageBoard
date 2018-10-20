@@ -7,7 +7,6 @@ var path = require('path'),
   mongoose = require('mongoose'),
   Post = mongoose.model('Post'),
   fs = require('fs'),
-  path = require('path'),
   multer = require('multer'),
   multerS3 = require('multer-s3'),
   aws = require('aws-sdk'),
@@ -35,28 +34,30 @@ exports.create = function (req, res) {
   var post = new Post(req.body);
   var user = req.user;
 
-  post.name = user ? (req.body.name ? post.name : user.displayName) : post.name;
+  post.name = (user && !req.body.name) ? user.displayName : post.name;
   post.isUser = !!user;
 
-  var TrySave = function(reqPost, res){
-    reqPost.save(function(err){
-      if(err && err.code === 11000){//Repited index (Post number)
+  var trySave = function (reqPost, res) {
+    reqPost.save(function (err) {
+      if (err && err.code === 11000) { // Repited index (Post number)
         reqPost.number++;
-        TrySave(reqPost, res);
-      }else if(err){
+        trySave(reqPost, res);
+      } else if (err) {
         return res.status(422).send({
           message: errorHandler.getErrorMessage(err)
         });
-      }else {
-        idList.forEach(function (elem){
+      } else {
+        idList.forEach(function (elem) {
           Post.findById(elem).exec(function (err, postToUpdate) {
             if (err) {
-              //Do nothing
+              // Do nothing
             } else if (postToUpdate) {
-              postToUpdate.replies.set(postToUpdate.replies.length , reqPost.number);
+              postToUpdate.replies.set(postToUpdate.replies.length, reqPost.number);
               postToUpdate.save(function (err) {
                 if (err) {
+                  // Do nothing
                 } else {
+                  // Do nithing
                 }
               });
             }
@@ -65,17 +66,15 @@ exports.create = function (req, res) {
         res.json(reqPost);
       }
     });
-  }
+  };
 
-  TrySave(post, res);
+  trySave(post, res);
 };
-
 
 /**
  * Upload file
  */
 exports.uploadFile = function (req, res) {
-  
   var user = req.user;
   var existingImageUrl;
   var multerConfig;
@@ -98,21 +97,21 @@ exports.uploadFile = function (req, res) {
 
   var upload = multer(multerConfig).single('newPostFile');
 
-    uploadImage()
-      // .then(updateUser)
-      // .then(deleteOldImage)
-      // .then(login)
-      .then(function () {
-        var objFile = {
-          pathFile: config.uploads.storage === 's3' && config.aws.s3 ?
-            req.file.location :
-            '/' + req.file.path,
-        };
-        res.json(objFile);
-      })
-      .catch(function (err) {
-        res.status(422).send(err);
-      });
+  uploadImage()
+    // .then(updateUser)
+    // .then(deleteOldImage)
+    // .then(login)
+    .then(function () {
+      var objFile = {
+        pathFile: config.uploads.storage === 's3' && config.aws.s3 ?
+          req.file.location :
+          '/' + req.file.path
+      };
+      res.json(objFile);
+    })
+    .catch(function (err) {
+      res.status(422).send(err);
+    });
 
   function uploadImage() {
     return new Promise(function (resolve, reject) {
@@ -127,55 +126,55 @@ exports.uploadFile = function (req, res) {
   }
 
 
-  function deleteOldImage() {
-    return new Promise(function (resolve, reject) {
-      if (existingImageUrl !== User.schema.path('profileImageURL').defaultValue) {
-        if (useS3Storage) {
-          try {
-            var { region, bucket, key } = amazonS3URI(existingImageUrl);
-            var params = {
-              Bucket: config.aws.s3.bucket,
-              Key: key
-            };
+  // function deleteOldImage() {
+  //   return new Promise(function (resolve, reject) {
+  //     if (existingImageUrl !== User.schema.path('profileImageURL').defaultValue) {
+  //       if (useS3Storage) {
+  //         try {
+  //           var { region, bucket, key } = amazonS3URI(existingImageUrl);
+  //           var params = {
+  //             Bucket: config.aws.s3.bucket,
+  //             Key: key
+  //           };
 
-            s3.deleteObject(params, function (err) {
-              if (err) {
-                console.log('Error occurred while deleting old profile picture.');
-                console.log('Check if you have sufficient permissions : ' + err);
-              }
+  //           s3.deleteObject(params, function (err) {
+  //             if (err) {
+  //               console.log('Error occurred while deleting old profile picture.');
+  //               console.log('Check if you have sufficient permissions : ' + err);
+  //             }
 
-              resolve();
-            });
-          } catch (err) {
-            console.warn(`${existingImageUrl} is not a valid S3 uri`);
+  //             resolve();
+  //           });
+  //         } catch (err) {
+  //           console.warn(`${existingImageUrl} is not a valid S3 uri`);
 
-            return resolve();
-          }
-        } else {
-          fs.unlink(path.resolve('.' + existingImageUrl), function (unlinkError) {
-            if (unlinkError) {
+  //           return resolve();
+  //         }
+  //       } else {
+  //         fs.unlink(path.resolve('.' + existingImageUrl), function (unlinkError) {
+  //           if (unlinkError) {
 
-              // If file didn't exist, no need to reject promise
-              if (unlinkError.code === 'ENOENT') {
-                console.log('Removing profile image failed because file did not exist.');
-                return resolve();
-              }
+  //             // If file didn't exist, no need to reject promise
+  //             if (unlinkError.code === 'ENOENT') {
+  //               console.log('Removing profile image failed because file did not exist.');
+  //               return resolve();
+  //             }
 
-              console.error(unlinkError);
+  //             console.error(unlinkError);
 
-              reject({
-                message: 'Error occurred while deleting old profile picture'
-              });
-            } else {
-              resolve();
-            }
-          });
-        }
-      } else {
-        resolve();
-      }
-    });
-  }
+  //             reject({
+  //               message: 'Error occurred while deleting old profile picture'
+  //             });
+  //           } else {
+  //             resolve();
+  //           }
+  //         });
+  //       }
+  //     } else {
+  //       resolve();
+  //     }
+  //   });
+  // }
 
 };
 
@@ -231,7 +230,7 @@ exports.delete = function (req, res) {
  * List of posts
  */
 exports.list = function (req, res) {
-  Post.find({threadParent: req.post.number}).sort('created').exec(function (err, posts) {
+  Post.find({ threadParent: req.post.number }).sort('created').exec(function (err, posts) {
     if (err) {
       return res.status(422).send({
         message: errorHandler.getErrorMessage(err)
@@ -253,7 +252,7 @@ exports.postByID = function (req, res, next, id) {
     });
   }
 
-    Post.findById(id).exec(function (err, post) {
+  Post.findById(id).exec(function (err, post) {
     if (err) {
       return next(err);
     } else if (!post) {

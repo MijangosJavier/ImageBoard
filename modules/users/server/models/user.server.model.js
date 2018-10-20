@@ -41,7 +41,7 @@ var validateLocalStrategyEmail = function (email) {
  */
 
 var validateUsername = function (username) {
-  var usernameRegex = /^(?=[\w.-]+$)(?!.*[._-]{2})(?![._-])(?!.*[._-]$).{3,24}$/; ///^(?=[\w.-]+$)(?!.*[._-]{2})(?!\.)(?!.*\.$).{3,34}$/;
+  var usernameRegex = /^(?=[\w.-]+$)(?!.*[._-]{2})(?![._-])(?!.*[._-]$).{3,24}$/; // /^(?=[\w.-]+$)(?!.*[._-]{2})(?!\.)(?!.*\.$).{3,34}$/;
   return (
     this.provider !== 'local' ||
     (username && usernameRegex.test(username) && config.illegalUsernames.indexOf(username) < 0)
@@ -299,7 +299,7 @@ function seed(doc, options) {
             var user = new User(doc);
 
             user.provider = 'local';
-            user.displayName = user.username;/*user.firstName + ' ' + user.lastName;*/
+            user.displayName = user.username;
             user.password = passphrase;
 
             user.save(function (err) {

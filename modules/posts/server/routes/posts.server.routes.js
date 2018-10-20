@@ -24,5 +24,3 @@ module.exports = function (app) {
   // Finish by binding the post middleware
   app.param('postId', posts.postByID);
 };
-
-

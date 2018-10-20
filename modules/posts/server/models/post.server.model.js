@@ -10,16 +10,16 @@ var mongoose = require('mongoose'),
   chalk = require('chalk');
 
 var validateContent = function () {
-  return (this.content.comment!=='' || this.content.fileAttached.origFileName!==undefined);
+  return (this.content.comment !== '' || this.content.fileAttached.origFileName !== undefined);
 };
 
 var validateOP = function () {
-  return (this.isOP ? 
+  return (this.isOP ?
     (
-      this.content.comment!=='' &&
-      this.content.fileAttached.origFileName!==undefined
+      this.content.comment !== '' &&
+      this.content.fileAttached.origFileName !== undefined
     ) :
-      true
+    true
   );
 };
 
@@ -39,83 +39,83 @@ var PostSchema = new Schema({
   topic: {
     type: String,
     default: '',
-    trim: true,
+    trim: true
   },
   content: {
-    comment:{
+    comment: {
       type: String,
       default: '',
       trim: true,
-      maxlength:[2000, 'Post too long, max number of characters is 2000'],
-      validate: [validateContent, 'Post can not be empty'],
+      maxlength: [2000, 'Post too long, max number of characters is 2000'],
+      validate: [validateContent, 'Post can not be empty']
     },
-    fileAttached:{
-      fileURL:{
-        type: String,
+    fileAttached: {
+      fileURL: {
+        type: String
       },
-      mimetype:{
-        type: String,
+      mimetype: {
+        type: String
       },
-      width:{
-        type: Number,
+      width: {
+        type: Number
       },
-      height:{
-        type: Number,
+      height: {
+        type: Number
       },
       weight: {
-        type: String,
+        type: String
       },
-      origFileName:{
-        type: String,
-      },
-    },   
+      origFileName: {
+        type: String
+      }
+    }
   },
-  specialID:{
+  specialID: {
     type: String,
     default: '00000000',
     trim: true,
     minlength: 8,
-    maxlength: 8,
+    maxlength: 8
   },
-  number:{
+  number: {
     type: Number,
     index: true,
-    unique: true,
+    unique: true
   },
-  isOP:{
+  isOP: {
     type: Boolean,
     default: false,
-    validate: [validateOP, 'Thread must have a picture and a comment'],
+    validate: [validateOP, 'Thread must have a picture and a comment']
   },
-  threadParent:{
-    type: Number,
+  threadParent: {
+    type: Number
   },
-  isUser:{
+  isUser: {
     type: Boolean,
-    default: false,
+    default: false
   },
-  name:{
+  name: {
     type: String,
     default: 'Anonymous',
     validate: [validateName, 'Please enter a valid name, use only alphanumeric characters'],
-    maxlength: [24 , 'Name too long, max character count is 24'],
+    maxlength: [24, 'Name too long, max character count is 24']
   },
-  replies:[Number],
+  replies: [Number]
 });
 
 PostSchema.pre('save', function (next) {
   var _this = this;
-  if(this.number === undefined){
+  if (this.number === undefined) {
     this.findLastPost()
-      .then(function (lastPost){
+      .then(function (lastPost) {
         _this.number = lastPost !== null ? lastPost.number + 1 : 1;
-        _this.threadParent= _this.isOP ? _this.number : _this.threadParent/*Must be post.threadPatent OR Number of thrad*/;
+        _this.threadParent = _this.isOP ? _this.number : _this.threadParent;
         next();
       })
       .catch(function (err) {
         next(err);
       });
-  }else{
+  } else {
     next();
   }
 });
@@ -125,7 +125,7 @@ PostSchema.methods.findLastPost = function () {
   return new Promise(function (resolve, reject) {
     Post
       .findOne({})
-      .sort({_id: -1})
+      .sort({ _id: -1 })
       // .limit(1)
       .exec(function (err, lastPost) {
         if (err) {
@@ -239,5 +239,3 @@ function seed(doc, options) {
 
   });
 }
-
-

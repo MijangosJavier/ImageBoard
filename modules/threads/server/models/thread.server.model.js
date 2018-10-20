@@ -20,11 +20,11 @@ var ThreadSchema = new Schema({
   topic: {
     type: String,
     default: '',
-    trim: true,
+    trim: true
   },
-  number:{
-    type: Number,
-  },
+  number: {
+    type: Number
+  }
 });
 
 ThreadSchema.statics.seed = seed;

@@ -260,16 +260,15 @@ describe('User Model Unit Tests:', function () {
       var _user1 = new User(user1);
 
       User.generateRandomPassphrase()
-      .then(function (password) {
-        _user1.password = password;
-        _user1.validate(function (err) {
+        .then(function (password) {
+          _user1.password = password;
+          _user1.validate(function (err) {
+            should.not.exist(err);
+          });
+        })
+        .catch(function (err) {
           should.not.exist(err);
         });
-      })
-      .catch(function (err) {
-        should.not.exist(err);
-      });
-
     });
 
     it('should validate when the password is undefined', function () {

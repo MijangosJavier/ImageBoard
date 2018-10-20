@@ -68,5 +68,4 @@
   function newThread(ThreadsService) {
     return new ThreadsService();
   }
-  
 }());

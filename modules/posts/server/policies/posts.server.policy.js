@@ -11,7 +11,7 @@ acl = new acl(new acl.memoryBackend());
 /**
  * Invoke Posts Permissions /api/posts/postfile
  */
-exports.invokeRolesPolicies = function () {//'/api/listposts/:postId'
+exports.invokeRolesPolicies = function () {
   acl.allow([{
     roles: ['admin'],
     allows: [{

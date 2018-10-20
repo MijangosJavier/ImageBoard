@@ -38,8 +38,8 @@
         controller: 'PostsController',
         controllerAs: 'vm',
         resolve: {
-          postResolve: getListPosts/*newPost*///getPost
-        },
+          postResolve: getListPosts/* newPost*/// getPost
+        }
         // data: {
         //   pageTitle: '{{ postResolve.threadParent }}'
         // }

@@ -16,7 +16,7 @@ var _ = require('lodash'),
   User = mongoose.model('User'),
   validator = require('validator');
 
-var whitelistedFields = [/*'firstName', 'lastName',*/ 'email', 'username'];
+var whitelistedFields = ['email', 'username'];
 
 var useS3Storage = config.uploads.storage === 's3' && config.aws.s3;
 var s3;
@@ -42,7 +42,7 @@ exports.update = function (req, res) {
     user = _.extend(user, _.pick(req.body, whitelistedFields));
 
     user.updated = Date.now();
-    user.displayName = user.username/*user.firstName + ' ' + user.lastName*/;
+    user.displayName = user.username;
 
     user.save(function (err) {
       if (err) {
