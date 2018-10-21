@@ -22,7 +22,6 @@
     vm.scrollTo = scrollTo;
     vm.refresh = refresh;
     formatComment();
-    // $scope.formatComment = formatComment;
 
     // Remove existing post
     function remove() {
@@ -73,14 +72,14 @@
         vm.fileSelected = false;
         vm.progress = 0;
 
-        if ($scope.picFile) {
+        if (vm.picFile) {
           var fileAttached = {
             fileURL: response.pathFile,
-            mimetype: $scope.picFile.type,
-            origFileName: $scope.picFile.name,
-            weight: $scope.picFile.size,
-            height: $scope.picFile.$ngfHeight,
-            width: $scope.picFile.$ngfWidth
+            mimetype: vm.picFile.type,
+            origFileName: vm.picFile.name,
+            weight: vm.picFile.size,
+            height: vm.picFile.$ngfHeight,
+            width: vm.picFile.$ngfWidth
           };
 
           if (!!(!vm.post.content)) {
@@ -96,7 +95,6 @@
 
         }
 
-        var origStr = vm.post.content.comment;
         var procesedStr;
         var replies = [];
         var repliesInPost = [];
@@ -142,8 +140,8 @@
           return searchLinks(res);
         }
 
-        if (!!(vm.post.content.comment)) {
-          repliesInPost = searchLinks(origStr);
+        if (!!(vm.post.content && vm.post.content.comment)) {
+          repliesInPost = searchLinks(vm.post.content.comment);
         }
 
         function cleanRepliesList(list) {
@@ -199,7 +197,7 @@
         Notification.error({ message: res.data.message, title: '<i class="glyphicon glyphicon-remove"></i> Post save error!' });
       }
 
-      upload($scope.picFile);
+      upload(vm.picFile);
     }
 
     function showFloatingForm(postNumber) {
@@ -220,7 +218,7 @@
       vm.post.content.comment = undefined;
       vm.post.content = undefined;
       vm.fileSelected = false;
-      $scope.picFile = undefined;
+      vm.picFile = undefined;
     }
 
     function scrollTo(elemID) {
@@ -320,7 +318,7 @@
           parentElem = parentElem + '</p>';
           vm.posts[key].formattedComment = $sce.trustAsHtml(parentElem);
         } else {
-          return;
+          // Do nothing
         }
       }
     }
