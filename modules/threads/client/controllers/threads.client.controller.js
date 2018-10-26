@@ -20,9 +20,9 @@
     // Remove existing post
     function remove() {
       if ($window.confirm('Are you sure you want to delete?')) {
-        vm.post.$remove(function () {
-          $state.go('posts.list');
-          Notification.success({ message: '<i class="glyphicon glyphicon-ok"></i> Post deleted successfully!' });
+        vm.thread.$remove(function () {
+          $state.go('threads.list');
+          Notification.success({ message: '<i class="glyphicon glyphicon-ok"></i> Thread deleted successfully!' });
         });
       }
     }

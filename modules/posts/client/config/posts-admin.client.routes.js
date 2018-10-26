@@ -35,6 +35,18 @@
           postResolve: newPost
         }
       })
+      .state('admin.posts.view', {
+        url: '/:postId',
+        templateUrl: '/modules/posts/client/views/admin/view-post.client.view.html',
+        controller: 'PostsController',
+        controllerAs: 'vm',
+        data: {
+          roles: ['admin']
+        },
+        resolve: {
+          postResolve: getListPosts
+        }
+      })
       .state('admin.posts.edit', {
         url: '/:postId/edit',
         templateUrl: '/modules/posts/client/views/admin/form-post.client.view.html',
@@ -62,5 +74,13 @@
 
   function newPost(PostsService) {
     return new PostsService();
+  }
+
+  getListPosts.$inject = ['$stateParams', 'ListPostsService'];
+
+  function getListPosts($stateParams, ListPostsService) {
+    return ListPostsService.query({
+      postId: $stateParams.postId
+    }).$promise;
   }
 }());

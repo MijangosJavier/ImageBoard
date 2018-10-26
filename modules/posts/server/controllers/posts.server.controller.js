@@ -6,6 +6,7 @@
 var path = require('path'),
   mongoose = require('mongoose'),
   Post = mongoose.model('Post'),
+  Thread = mongoose.model('Thread'),
   fs = require('fs'),
   multer = require('multer'),
   multerS3 = require('multer-s3'),
@@ -68,7 +69,23 @@ exports.create = function (req, res) {
     });
   };
 
-  trySave(post, res);
+  if (!post.isOP) {
+    Thread.findOne({ number: post.threadParent }).exec(function (err, thread) {
+      if (err) {
+        return res.status(422).send({
+          message: errorHandler.getErrorMessage(err)
+        });
+      } else if (!thread) {
+        return res.status(422).send({
+          message: 'Can not post, thread was deleted'
+        });
+      } else {
+        trySave(post, res);
+      }
+    });
+  } else {
+    trySave(post, res);
+  }
 };
 
 /**
@@ -215,15 +232,43 @@ exports.update = function (req, res) {
 exports.delete = function (req, res) {
   var post = req.post;
 
-  post.remove(function (err) {
-    if (err) {
-      return res.status(422).send({
-        message: errorHandler.getErrorMessage(err)
-      });
-    } else {
-      res.json(post);
-    }
-  });
+  function deletePost() {
+    post.remove(function (err) {
+      if (err) {
+        return res.status(422).send({
+          message: errorHandler.getErrorMessage(err)
+        });
+      } else {
+        res.json(post);
+      }
+    });
+  }
+
+  function deleteThread() {
+    Thread.findOne({ number: post.number }).exec(function (err, thread) {
+      if (err) {
+        return res.status(422).send({
+          message: errorHandler.getErrorMessage(err)
+        });
+      } else {
+        thread.remove(function (err) {
+          if (err) {
+            return res.status(422).send({
+              message: errorHandler.getErrorMessage(err)
+            });
+          } else {
+            deletePost();
+          }
+        });
+      }
+    });
+  }
+
+  if (!post.isOP) {
+    deletePost();
+  } else {
+    deleteThread();
+  }
 };
 
 /**

@@ -24,11 +24,18 @@
     formatComment();
 
     // Remove existing post
-    function remove() {
+    function remove(removablePost) {
       if ($window.confirm('Are you sure you want to delete?')) {
-        vm.post.$remove(function () {
-          $state.go('posts.list');
-          Notification.success({ message: '<i class="glyphicon glyphicon-ok"></i> Post deleted successfully!' });
+        var service = new PostsService();
+        service._id = removablePost._id;
+        service.$remove(function () {
+          if (!removablePost.isOP) {
+            $state.reload();
+            Notification.success({ message: '<i class="glyphicon glyphicon-ok"></i> Post deleted successfully!' });
+          } else {
+            $state.go('admin.threads.list');
+            Notification.success({ message: '<i class="glyphicon glyphicon-ok"></i> Thread deleted successfully!' });
+          }
         });
       }
     }
@@ -229,8 +236,12 @@
       }
 
       var elmnt = document.getElementById(elemID);
-      elmnt.classList.add('focused');
-      elmnt.scrollIntoView({ block: 'center' });
+      try {
+        elmnt.classList.add('focused');
+        elmnt.scrollIntoView({ block: 'center' });
+      } catch (err) {
+        Notification.error({ message: 'Post was deleted', title: '<i class="glyphicon glyphicon-remove"></i> Post link error!' });
+      }
     }
 
     function refresh() {

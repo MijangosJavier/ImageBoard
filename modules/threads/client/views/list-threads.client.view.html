@@ -32,10 +32,6 @@
         <div class="reply-File">
           <div>
             <img ng-if="file.mimetype !== 'video/webm'" ng-class="{'w-img-OP':((file.height < file.width) && (file.width >= 325)),'h-img-OP':((file.height >= file.width) && (file.height >= 325))}" ng-src="{{file.fileURL}}" class="reply-thumbnile">
-<!--             <img ng-if="((file.height >= file.width) && (file.height >= 325))" ng-src="{{file.fileURL}}" style="height: 325px; width: auto;">
-            <img ng-if="((file.height >= file.width) && (file.height < 325))" ng-src="{{file.fileURL}}">
-            <img ng-if="((file.height < file.width) && (file.height >= 325))" ng-src="{{file.fileURL}}" style="height: auto; width: 325px;">
-            <img ng-if="((file.height < file.width) && (file.height < 325))" ng-src="{{file.fileURL}}"> -->
             <video ng-if="file.mimetype === 'video/webm'" width="325" height="auto" autoplay loop controls muted class="reply-thumbnile">
               <source ng-src="{{file.fileURL}}" type="video/webm">
             </video>

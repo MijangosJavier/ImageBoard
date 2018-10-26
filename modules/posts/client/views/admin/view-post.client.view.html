@@ -1,0 +1,150 @@
+<section>
+  <div id="top">
+    <hr>
+    [<span class="fake-link" ng-click="vm.scrollTo('bottom')">Bottom</span>]
+    <hr>
+  </div>
+
+  <div class="list-group">
+    <div ng-repeat="reply in vm.posts" class="list-group-item" ng-class="{'OP-post':reply.isOP, 'reply-post':!reply.isOP}" id="{{reply.number}}">
+      <div hidden ng-model="file" ng-init="file = reply.content.fileAttached"></div>
+      <div hidden ng-model="reply.hidethumb" ng-init="reply.hidethumb = false"></div>
+      <div>
+        <div>
+          <div ng-if="!reply.isOP">
+            <div>
+            <small class="list-group-item-text">
+              <button type="button" class="btn btn-danger btn-xs" ng-click="vm.remove(reply)" title="Delete post"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></button>
+              <strong><span ng-show="(reply.isUser && reply.name!=='Anonymous')">##</span>
+              <span ng-bind="reply.name"></span></strong>
+               (ID:<span ng-bind="reply.specialID"></span>) 
+              <span ng-bind="reply.created | date:'MM/d/yy(EEE) HH:mm:ss'"></span> 
+               No. <span ng-bind="reply.number" class="hfake-link" ng-click="vm.showF(reply.number)"> </span>
+               <button type="button" class="btn btn-default btn-xs btn-reply" ng-click="vm.showF(reply.number)" title="Reply"><span class="glyphicon glyphicon-triangle-right" aria-hidden="true"></span></button> 
+              <span>
+                 <span ng-repeat="backlink in reply.replies" class="fake-link backlink" ng-click="vm.scrollTo(backlink)"> >>{{backlink}} </span>
+              </span>
+            </small>
+            </div>      
+          </div>
+          <small ng-if="file">
+            File:
+            <span ng-if="file.origFileName.length > 30"><span ng-bind="file.origFileName.slice(0,25)" title="{{file.origFileName}}"></span>...</span>
+            <span ng-if="file.origFileName.length <= 30" ng-bind="file.origFileName" title="{{file.origFileName}}"></span>
+            (<span ng-if="(file.weight < 1024)" ><span ng-bind="file.weight"></span> B </span>
+            <span ng-if="(file.weight > 1024) &&(file.weight < 1048576)"><span ng-bind="(file.weight/1024).toFixed(0)"></span> KB </span>
+            <span ng-if="(file.weight > 1048576)"><span ng-bind="((file.weight/1024)/1024).toFixed(1)"></span> MB </span>
+            <span ng-bind="file.width"></span>
+            <span ng-if="file.height">x </span><span ng-bind="file.height"></span>)
+            <span ng-if="file.mimetype === 'video/webm' && reply.hidethumb">[<span class="fake-link" ng-click="reply.hidethumb = false">close</span>]</span>
+          </small>
+        </div>
+        <div ng-if="file" >
+          <div>
+            <img ng-if="(file.mimetype !== 'video/webm' && reply.isOP) && !reply.hidethumb" ng-class="{'w-img-OP':((file.height < file.width) && (file.width >= 325)),'h-img-OP':((file.height >= file.width) && (file.height >= 325))}" ng-src="{{file.fileURL}}" class="reply-thumbnile reply-File" ng-click="reply.hidethumb = true">
+            <img ng-if="(file.mimetype !== 'video/webm' && !reply.isOP) && !reply.hidethumb" ng-class="{'w-img':((file.height < file.width) && (file.width >= 125)),'h-img':((file.height >= file.width) && (file.height >= 125))}" ng-src="{{file.fileURL}}"  class="reply-thumbnile reply-File" ng-click="reply.hidethumb = true">
+            <img ng-if="file.mimetype !== 'video/webm' && reply.hidethumb" ng-src="{{file.fileURL}}" class="reply-thumbnile" ng-click="reply.hidethumb = false">
+            <video ng-if="file.mimetype === 'video/webm' && !reply.hidethumb" width="125" height="auto"  muted class="reply-thumbnile reply-File" ng-click="reply.hidethumb = true">
+              <source ng-src="{{file.fileURL}}" type="video/webm">
+            </video>
+            <div ng-if="file.mimetype === 'video/webm' && reply.hidethumb">
+              <video  height="auto" loop controls muted class="reply-thumbnile">
+                <source ng-src="{{file.fileURL}}" type="video/webm">
+              </video>
+            </div>
+          </div>   
+        </div>
+        <div>
+          <div ng-if="reply.isOP">
+            <button type="button" class="btn btn-danger btn-xs" ng-click="vm.remove(reply)" title="Delete thread"><span class="glyphicon glyphicon-trash" aria-hidden="true"></span></button>
+            <strong ng-show="reply.topic !== ''" ng-bind="reply.topic"></strong>
+            <small class="list-group-item-text">
+              <strong><span ng-show="(reply.isUser && reply.name!=='Anonymous')">##</span>
+              <span ng-bind="reply.name"></span></strong>
+               (ID:<span ng-bind="reply.specialID"></span>) 
+              <span ng-bind="reply.created | date:'MM/d/yy(EEE) HH:mm:ss'"></span> 
+               No. <span ng-bind="reply.number" class="hfake-link" ng-click="vm.showF(reply.number)"></span>
+               <button type="button" class="btn btn-default btn-xs btn-reply-OP" ng-click="vm.showF(reply.number)" title="Reply"><span class="glyphicon glyphicon-triangle-right" aria-hidden="true" ></span></button> 
+               <span>
+                 <span ng-repeat="backlink in reply.replies" class="fake-link backlink" ng-click="vm.scrollTo(backlink)"> >>{{backlink}}</span>
+              </span>
+          </small>
+          </div>
+          <div ng-bind-html="reply.formattedComment" class="post-comment">
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div ng-if="!vm.floatingForm" class="col-md-12 centered">
+    <div class="container-fluid">
+    <form id="post-form" name="vm.form.postForm" class="form-horizontal" ng-submit="vm.save(vm.form.postForm.$valid)" novalidate>
+      <fieldset>
+        <div class="form-group">
+          <label class="control-label" for="name">Name</label>
+          <input name="name" type="text" ng-model="vm.post.name" id="name" class="form-control" placeholder="{{vm.authentication.user ? vm.authentication.user.displayName : 'Anonymous'}}" maxlength="24">
+        </div>
+        <div class="form-group">
+          <label class="control-label" for="commentF">Comment</label>
+          <textarea name="comment" data-ng-model="vm.post.content.comment" id="comment" class="form-control" cols="30" rows="4" placeholder="Comment"></textarea>
+        </div>
+        <div ng-show="!vm.fileSelected" class="form-group">
+          <button  class="btn btn-default btn-file" ngf-select="(vm.fileSelected = true) && (vm.loading = false)" ng-model="vm.picFile" accept="image/*, video/webm"  ngf-validate="{size: {max: '5MB'}, height: {max: 12000}, width: {max: 12000}}">Select Picture</button>
+        </div>
+        <div ng-show="vm.fileSelected" class="form-group">
+          <button type="button" class="btn btn-default" ng-click="vm.fileSelected = false" >Cancel</button>
+          <small class="text-muted">{{vm.picFile ? vm.picFile.name : 'Not file selected'}}</small>
+        </div>
+        <div class="form-group">
+          <button ng-click="vm.loading = true" type="submit" class="btn btn-primary">Create</button>
+        </div>
+        <div ng-show="(vm.fileSelected && vm.loading)" class="progress text-center">
+          <div class="progress-bar" role="progressbar" aria-valuenow="{{vm.progress}}" aria-valuemin="0" aria-valuemax="100" style="width:{{vm.progress}}%" ng-bind="vm.progress + '%'">
+            <span class="sr-only">{{vm.progress}}% Complete</span>
+          </div>
+        </div>
+      </fieldset>
+    </form>
+    </div>
+  </div>
+
+  <div class="floating-form" ng-class="{'hide-form':!vm.floatingForm}">
+    <div class="close-form"><button type="button" class="btn btn-danger" ng-click="vm.hideF()">X</button></div>
+    <div class="container-fluid">
+    <form id="post-form" name="vm.form.postFormFloating" class="form-horizontal" ng-submit="vm.save(vm.form.postFormFloating.$valid)" novalidate>
+      <fieldset>
+        <div class="form-group">
+          <label class="control-label" for="name">Name</label>
+          <input name="name" type="text" ng-model="vm.post.name" id="name" class="form-control" placeholder="{{vm.authentication.user ? vm.authentication.user.displayName : 'Anonymous'}}" maxlength="24">
+        </div>
+        <div class="form-group">
+          <label class="control-label" for="comment">Comment</label>
+          <textarea name="comment" data-ng-model="vm.post.content.comment" id="comment" class="form-control" cols="30" rows="4" placeholder="Comment" autofocus="{{vm.floatingForm}}"></textarea>
+        </div>
+        <div ng-show="!vm.fileSelected" class="form-group">
+          <button  class="btn btn-default btn-file" ngf-select="(vm.fileSelected = true) && (vm.loading = false)" ng-model="vm.picFile" accept="image/*, video/webm"  ngf-validate="{size: {max: '5MB'}, height: {max: 12000}, width: {max: 12000}}">Select Picture</button>
+        </div>
+        <div ng-show="vm.fileSelected" class="form-group">
+          <button type="button" class="btn btn-default" ng-click="vm.fileSelected = false" >Cancel</button>
+          <small class="text-muted">{{vm.picFile ? vm.picFile.name : 'Not file selected'}}</small>
+        </div>
+        <div class="form-group">
+          <button ng-click="vm.loading = true" type="submit" class="btn btn-primary">Create</button>
+        </div>
+        <div ng-show="(vm.fileSelected && vm.loading)" class="progress text-center">
+          <div class="progress-bar" role="progressbar" aria-valuenow="{{vm.progress}}" aria-valuemin="0" aria-valuemax="100" style="width:{{vm.progress}}%" ng-bind="vm.progress + '%'">
+            <span class="sr-only">{{vm.progress}}% Complete</span>
+          </div>
+        </div>
+      </fieldset>
+    </form>
+    </div>
+  </div>
+  <div id="bottom">
+    <hr>
+    [<span class="fake-link" ng-click="vm.scrollTo('top')">Top</span>] [<span class="fake-link" ng-click="vm.refresh()">Refresh</span>]
+    <hr>
+  </div>
+</section>

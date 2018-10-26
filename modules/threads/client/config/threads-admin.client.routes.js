@@ -17,7 +17,7 @@
       .state('admin.threads.list', {
         url: '',
         templateUrl: '/modules/threads/client/views/admin/list-threads.client.view.html',
-        controller: 'ThreadsAdminListController',
+        controller: 'ThreadsListController', // 'ThreadsAdminListController',
         controllerAs: 'vm',
         data: {
           roles: ['admin']
